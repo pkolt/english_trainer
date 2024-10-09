@@ -19,8 +19,8 @@ export const openMyDB = async () => {
           autoIncrement: false,
         });
 
-        wordStore.createIndex('by-text-english', 'textEnglish');
-        wordStore.createIndex('by-text-translate', 'textTranslate');
+        wordStore.createIndex('by-text', 'text', { unique: true });
+        wordStore.createIndex('by-translate', 'translate');
       }
     },
     // upgrade(db, oldVersion, newVersion, transaction, event) {}

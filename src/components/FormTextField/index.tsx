@@ -25,6 +25,7 @@ export const FormTextField = ({ name, choices, ...props }: FormTextFieldProps) =
       render={({ field: { onChange, onBlur, value, ref }, fieldState: { error } }) => (
         <TextField
           error={!!error}
+          helperText={error?.message}
           ref={ref}
           value={value ?? ''}
           onChange={onChange}

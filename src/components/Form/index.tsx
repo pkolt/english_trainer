@@ -30,7 +30,7 @@ export const Form = <Schema extends ZodSchema, FormData extends z.infer<Schema>>
   const {
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isValid, isDirty },
   } = methods;
 
   return (
@@ -38,10 +38,10 @@ export const Form = <Schema extends ZodSchema, FormData extends z.infer<Schema>>
       <FormProvider {...methods}>
         {children(methods)}
         <Stack direction="row" spacing={2}>
-          <LoadingButton variant="contained" type="submit" loading={isSubmitting}>
+          <LoadingButton variant="contained" type="submit" loading={isSubmitting} disabled={!isValid || !isDirty}>
             {submitButtonText}
           </LoadingButton>
-          <Button variant="outlined" onClick={() => reset(defaultValues)}>
+          <Button variant="outlined" onClick={() => reset(defaultValues)} disabled={!isDirty}>
             Очистить
           </Button>
         </Stack>
