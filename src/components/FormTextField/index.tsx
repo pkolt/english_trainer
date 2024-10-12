@@ -14,9 +14,10 @@ export type Choices = Choice[];
 interface FormTextFieldProps extends Props {
   name: string;
   choices?: Choices;
+  multiple?: boolean;
 }
 
-export const FormTextField = ({ name, choices, ...props }: FormTextFieldProps) => {
+export const FormTextField = ({ name, choices, multiple, ...props }: FormTextFieldProps) => {
   const { control } = useFormContext();
   return (
     <Controller
@@ -31,6 +32,11 @@ export const FormTextField = ({ name, choices, ...props }: FormTextFieldProps) =
           onChange={onChange}
           onBlur={onBlur}
           select={!!choices}
+          slotProps={{
+            select: {
+              multiple,
+            },
+          }}
           {...props}>
           {choices?.map((choice) => (
             <MenuItem key={choice.value} value={choice.value}>

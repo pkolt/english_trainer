@@ -10,14 +10,16 @@ import { findByWord } from '.';
 export const WordSchema = z
   .object({
     id: z.string().uuid(),
-    type: z.nativeEnum(WordType),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
+    type: z.array(z.nativeEnum(WordType)),
     text: z.string().min(1).trim(),
     translate: z.string().min(1).trim(),
-    transcription: z.string().trim(),
+    pronunciation: z.string().trim(),
     description: z.string().trim().optional(),
-    examples: z.string().trim().optional(),
+    example: z.string().trim().optional(),
+    exampleTranslate: z.string().trim().optional(),
+    note: z.string().trim().optional(),
 
     // Noun
     uncountable: z.boolean().optional(),

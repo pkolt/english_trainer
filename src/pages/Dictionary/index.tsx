@@ -1,7 +1,7 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
 import { Typography, Box, IconButton } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { Word } from '@/services/words/types';
+import { Word, WordType } from '@/services/words/types';
 import { useCallback, useEffect, useState } from 'react';
 import { deleteWord, getWordList } from '@/services/words';
 import EditIcon from '@mui/icons-material/Edit';
@@ -50,9 +50,9 @@ const Dictionary = () => {
     {
       field: 'type',
       headerName: 'Часть речи',
-      width: 150,
-      valueGetter: (value) => {
-        return WORD_TYPE_TO_NAME[value];
+      width: 250,
+      valueGetter: (value: string[]) => {
+        return value.map((key: string) => WORD_TYPE_TO_NAME[key as WordType]).join(', ');
       },
     },
     {

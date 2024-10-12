@@ -17,12 +17,12 @@ const makeDefaultValues = (): Word => {
   const today = DateTime.utc().toISO();
   return {
     id: window.crypto.randomUUID(),
-    type: WordType.Noun,
+    type: [WordType.Noun],
     createdAt: today,
     updatedAt: today,
     text: '',
     translate: '',
-    transcription: '',
+    pronunciation: '',
   };
 };
 
@@ -90,9 +90,9 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
                   </Alert>
                 )}
                 <FormTextField name="text" label="Слово" autoFocus />
-                <FormTextField name="type" label="Часть речи" choices={WORD_TYPE_CHOICES} />
+                <FormTextField name="type" label="Часть речи" choices={WORD_TYPE_CHOICES} multiple />
                 <FormTextField name="translate" label="Перевод" />
-                <FormTextField name="transcription" label="Транскрипция" />
+                <FormTextField name="pronunciation" label="Транскрипция" />
                 {/* {type === WordType.Verb && <></>} */}
               </>
             )}
