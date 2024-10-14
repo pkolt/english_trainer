@@ -8,8 +8,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { DialogProps } from '@toolpad/core/useDialogs';
 import CloseIcon from '@mui/icons-material/Close';
-import { makeDefaultValues } from './utils';
 import { FormContent } from './FormContent';
+import { getDefaultValues } from './utils';
 
 const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | undefined>) => {
   const notifications = useNotifications();
@@ -46,7 +46,7 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
           setDefaultValues(word);
         }
       } else {
-        setDefaultValues(makeDefaultValues());
+        setDefaultValues(getDefaultValues());
       }
     })();
   }, [id]);

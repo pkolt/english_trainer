@@ -3,11 +3,13 @@ import { FormTextField } from '../FormTextField';
 import { WORD_TYPE_CHOICES } from './constants';
 import { useWatch } from 'react-hook-form';
 import { fixOnlyEnglish, fixOnlyRussian } from '../FormTextField/utils';
+import { FormCheckboxField } from '../FormCheckboxField';
 
 export const FormContent = () => {
   const values = useWatch<Word>();
   return (
     <>
+      <FormCheckboxField<Word> name="favorite" label="Избранное" />
       <FormTextField<Word> name="text" label="Слово" autoFocus transform={fixOnlyEnglish} />
       <FormTextField<Word> name="translate" label="Перевод" transform={fixOnlyRussian} />
       <FormTextField<Word> name="transcription" label="Транскрипция" />

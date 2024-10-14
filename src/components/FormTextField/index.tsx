@@ -1,3 +1,4 @@
+import { SimpleObject } from '@/types';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -10,8 +11,6 @@ interface Choice {
 }
 
 export type Choices = Choice[];
-
-type SimpleObject = Record<string, unknown>;
 
 type FormTextFieldProps<T extends SimpleObject> = {
   name: keyof T;
