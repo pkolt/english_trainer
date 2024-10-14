@@ -51,8 +51,8 @@ const Dictionary = () => {
       field: 'type',
       headerName: 'Часть речи',
       width: 250,
-      valueGetter: (value: string[]) => {
-        return value.map((key: string) => WORD_TYPE_TO_NAME[key as WordType]).join(', ');
+      valueGetter: (value?: WordType) => {
+        return WORD_TYPE_TO_NAME[value as WordType] ?? '';
       },
     },
     {

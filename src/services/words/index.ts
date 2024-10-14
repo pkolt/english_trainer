@@ -27,7 +27,7 @@ export const deleteWord = async (id: string): Promise<void> => {
   return db.delete(WORDS_STORE, id);
 };
 
-export const findByWord = async (text: string): Promise<Word | undefined> => {
+export const findByWord = async (text: string): Promise<Word[] | undefined> => {
   const db = await openMyDB();
-  return db.getFromIndex(WORDS_STORE, 'by-text', text);
+  return db.getAllFromIndex(WORDS_STORE, 'by-text', text);
 };

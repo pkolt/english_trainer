@@ -19,7 +19,7 @@ export const openMyDB = async () => {
           autoIncrement: false,
         });
 
-        wordStore.createIndex('by-text', 'text', { unique: true });
+        wordStore.createIndex('by-text', 'text');
         wordStore.createIndex('by-translate', 'translate');
       }
     },

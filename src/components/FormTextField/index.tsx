@@ -23,28 +23,30 @@ export const FormTextField = ({ name, choices, multiple, ...props }: FormTextFie
     <Controller
       control={control}
       name={name}
-      render={({ field: { onChange, onBlur, value, ref }, fieldState: { error } }) => (
-        <TextField
-          error={!!error}
-          helperText={error?.message}
-          ref={ref}
-          value={value ?? ''}
-          onChange={onChange}
-          onBlur={onBlur}
-          select={!!choices}
-          slotProps={{
-            select: {
-              multiple,
-            },
-          }}
-          {...props}>
-          {choices?.map((choice) => (
-            <MenuItem key={choice.value} value={choice.value}>
-              {choice.label}
-            </MenuItem>
-          ))}
-        </TextField>
-      )}
+      render={({ field: { onChange, onBlur, value, ref }, fieldState: { error } }) => {
+        return (
+          <TextField
+            error={!!error}
+            helperText={error?.message}
+            ref={ref}
+            value={value ?? ''}
+            onChange={onChange}
+            onBlur={onBlur}
+            select={!!choices}
+            slotProps={{
+              select: {
+                multiple,
+              },
+            }}
+            {...props}>
+            {choices?.map((choice) => (
+              <MenuItem key={choice.value} value={choice.value} onBlur={onBlur}>
+                {choice.label}
+              </MenuItem>
+            ))}
+          </TextField>
+        );
+      }}
     />
   );
 };
