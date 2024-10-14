@@ -11,13 +11,15 @@ interface Choice {
 
 export type Choices = Choice[];
 
-interface FormTextFieldProps extends Props {
-  name: string;
+type SimpleObject = Record<string, unknown>;
+
+type FormTextFieldProps<T extends SimpleObject> = {
+  name: keyof T;
   choices?: Choices;
   multiple?: boolean;
-}
+} & Props;
 
-export const FormTextField = ({ name, choices, multiple, ...props }: FormTextFieldProps) => {
+export const FormTextField = <T extends SimpleObject>({ name, choices, multiple, ...props }: FormTextFieldProps<T>) => {
   const { control } = useFormContext();
   return (
     <Controller
@@ -40,7 +42,7 @@ export const FormTextField = ({ name, choices, multiple, ...props }: FormTextFie
             }}
             {...props}>
             {choices?.map((choice) => (
-              <MenuItem key={choice.value} value={choice.value} onBlur={onBlur}>
+              <MenuItem key={choice.value} value={choice.value}>
                 {choice.label}
               </MenuItem>
             ))}

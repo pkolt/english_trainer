@@ -89,10 +89,10 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
                     {error.message}
                   </Alert>
                 )}
-                <FormTextField name="text" label="Слово" autoFocus />
-                <FormTextField name="translate" label="Перевод" />
-                <FormTextField name="transcription" label="Транскрипция" />
-                <FormTextField name="type" label="Тип" choices={WORD_TYPE_CHOICES} />
+                <FormTextField<Word> name="text" label="Слово" autoFocus />
+                <FormTextField<Word> name="translate" label="Перевод" />
+                <FormTextField<Word> name="transcription" label="Транскрипция" />
+                <FormTextField<Word> name="type" label="Тип" choices={WORD_TYPE_CHOICES} />
                 {/* {type === WordType.Verb && <></>} */}
               </>
             )}
