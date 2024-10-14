@@ -1,7 +1,7 @@
 import { z } from '@/zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Stack from '@mui/material/Stack';
-import { FormProvider, SubmitHandler, useForm, UseFormReturn } from 'react-hook-form';
+import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { ZodSchema } from 'zod';
 import Button from '@mui/material/Button';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -11,7 +11,7 @@ interface FormProps<Schema extends ZodSchema, FormData extends z.infer<Schema>> 
   onSubmit: SubmitHandler<FormData>;
   defaultValues: FormData;
   submitButtonText: string;
-  children: (methods: UseFormReturn<FormData>) => JSX.Element;
+  children: React.ReactNode;
 }
 
 export const Form = <Schema extends ZodSchema, FormData extends z.infer<Schema>>({
@@ -42,7 +42,7 @@ export const Form = <Schema extends ZodSchema, FormData extends z.infer<Schema>>
       marginTop={1}>
       {/* marginTop - Fix show label for top field */}
       <FormProvider {...methods}>
-        {children(methods)}
+        {children}
         <Stack direction="row" spacing={2}>
           <LoadingButton variant="contained" type="submit" loading={isSubmitting} disabled={!isValid || !isDirty}>
             {submitButtonText}

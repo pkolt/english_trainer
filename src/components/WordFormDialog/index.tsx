@@ -1,30 +1,15 @@
 import { Form } from '@/components/Form';
-import { Choices, FormTextField } from '@/components/FormTextField';
 import { createWord, readWord, updateWord } from '@/services/words';
 import { WordSchema } from '@/services/words/schema';
-import { Word, WordType } from '@/services/words/types';
+import { Word } from '@/services/words/types';
 import { Alert, AlertTitle, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';
-import { WORD_TYPE_TO_NAME } from '@/constants/word';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { DialogProps } from '@toolpad/core/useDialogs';
 import CloseIcon from '@mui/icons-material/Close';
-
-const WORD_TYPE_CHOICES: Choices = Object.values(WordType).map((value) => ({ label: WORD_TYPE_TO_NAME[value], value }));
-
-const makeDefaultValues = (): Word => {
-  const today = DateTime.utc().toISO();
-  return {
-    id: window.crypto.randomUUID(),
-    type: undefined,
-    createdAt: today,
-    updatedAt: today,
-    text: '',
-    translate: '',
-    transcription: '',
-  };
-};
+import { makeDefaultValues } from './utils';
+import { FormContent } from './FormContent';
 
 const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | undefined>) => {
   const notifications = useNotifications();
@@ -81,21 +66,15 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
             onSubmit={onSubmit}
             defaultValues={defaultValues}
             submitButtonText={id ? 'Сохранить' : 'Создать'}>
-            {() => (
-              <>
-                {error && (
-                  <Alert severity="error" onClose={() => setError(null)}>
-                    <AlertTitle>Произошла ошибка!</AlertTitle>
-                    {error.message}
-                  </Alert>
-                )}
-                <FormTextField<Word> name="text" label="Слово" autoFocus />
-                <FormTextField<Word> name="translate" label="Перевод" />
-                <FormTextField<Word> name="transcription" label="Транскрипция" />
-                <FormTextField<Word> name="type" label="Тип" choices={WORD_TYPE_CHOICES} />
-                {/* {type === WordType.Verb && <></>} */}
-              </>
-            )}
+            <>
+              {error && (
+                <Alert severity="error" onClose={() => setError(null)}>
+                  <AlertTitle>Произошла ошибка!</AlertTitle>
+                  {error.message}
+                </Alert>
+              )}
+              <FormContent />
+            </>
           </Form>
         ) : (
           'Loading...'

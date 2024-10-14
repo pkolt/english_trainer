@@ -17,22 +17,35 @@ type FormTextFieldProps<T extends SimpleObject> = {
   name: keyof T;
   choices?: Choices;
   multiple?: boolean;
+  // https://github.com/react-hook-form/react-hook-form/issues/10802
+  transform?: (value: string) => string;
 } & Props;
 
-export const FormTextField = <T extends SimpleObject>({ name, choices, multiple, ...props }: FormTextFieldProps<T>) => {
+type ChangeEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
+
+export const FormTextField = <T extends SimpleObject>({
+  name,
+  choices,
+  multiple,
+  transform,
+  ...props
+}: FormTextFieldProps<T>) => {
   const { control } = useFormContext();
   return (
     <Controller
       control={control}
       name={name}
       render={({ field: { onChange, onBlur, value, ref }, fieldState: { error } }) => {
+        const handleChange = (event: ChangeEvent) => {
+          onChange(transform ? transform(event.target.value) : event);
+        };
         return (
           <TextField
             error={!!error}
             helperText={error?.message}
             ref={ref}
             value={value ?? ''}
-            onChange={onChange}
+            onChange={handleChange}
             onBlur={onBlur}
             select={!!choices}
             slotProps={{
