@@ -1,6 +1,7 @@
 import { WordType } from '@/services/words/types';
 
 export const WORD_TYPE_TO_NAME: Record<WordType, string> = {
+  [WordType.None]: 'Не задано',
   [WordType.Phrase]: 'Фраза',
   [WordType.Sentence]: 'Предложение',
   [WordType.Verb]: 'Глагол',

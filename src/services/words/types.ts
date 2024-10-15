@@ -2,6 +2,7 @@ import { z } from '@/zod';
 import { WordSchema } from './schema';
 
 export enum WordType {
+  None = 'none',
   Phrase = 'phrase',
   Sentence = 'sentence',
   Verb = 'verb',

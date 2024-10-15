@@ -12,7 +12,7 @@ export const WordSchema = z
     id: z.string().uuid(),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
-    type: z.nativeEnum(WordType).optional().catch(undefined),
+    type: z.nativeEnum(WordType),
     text: z.string().min(1).trim(),
     translate: z.string().min(1).trim(),
     transcription: z.string().trim(),
@@ -31,8 +31,9 @@ export const WordSchema = z
     pastParticiple: z.string().uuid().optional(),
   })
   .superRefine(async (obj, ctx) => {
+    const { id, text, type } = obj;
     const words = await findByWord(obj.text);
-    const isMatch = words?.some((it) => it.text === obj.text && it.type === obj.type);
+    const isMatch = words?.some((it) => it.id !== id && it.text === text && it.type === type);
     if (isMatch) {
       ctx.addIssue({
         path: ['text'],

@@ -1,24 +1,23 @@
-import { Form } from '@/components/Form';
 import { createWord, readWord, updateWord } from '@/services/words';
-import { WordSchema } from '@/services/words/schema';
 import { Word } from '@/services/words/types';
-import { Alert, AlertTitle, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Alert, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { DateTime } from 'luxon';
 import { useCallback, useEffect, useState } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { DialogProps } from '@toolpad/core/useDialogs';
 import CloseIcon from '@mui/icons-material/Close';
-import { FormContent } from './FormContent';
 import { getDefaultValues } from './utils';
+import { WordForm } from './WordForm';
 
 const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | undefined>) => {
   const notifications = useNotifications();
-  const [defaultValues, setDefaultValues] = useState<Word | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [isLoading, setLoading] = useState(true);
+  const [word, setWord] = useState<Word | undefined>(undefined);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const onSubmit = useCallback(
     async (data: Word) => {
-      setError(null); // Reset state
+      setErrorMsg(null); // Reset state
       try {
         if (id) {
           await updateWord({ ...data, updatedAt: DateTime.utc().toISO() });
@@ -31,8 +30,8 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
           });
           onClose();
         }
-      } catch (error) {
-        setError(error as Error);
+      } catch {
+        setErrorMsg('Ошибка при сохранении данных!');
       }
     },
     [id, notifications, onClose],
@@ -40,13 +39,19 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
 
   useEffect(() => {
     (async () => {
-      if (id) {
-        const word = await readWord(id);
-        if (word) {
-          setDefaultValues(word);
+      try {
+        if (id) {
+          const word = await readWord(id);
+          if (!word) {
+            throw new Error('Word not exists!');
+          }
+          setWord(word);
+        } else {
+          setWord(getDefaultValues());
         }
-      } else {
-        setDefaultValues(getDefaultValues());
+        setLoading(false);
+      } catch {
+        setErrorMsg('Ошибка при загрузки данных!');
       }
     })();
   }, [id]);
@@ -60,25 +65,12 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        {defaultValues ? (
-          <Form
-            schema={WordSchema}
-            onSubmit={onSubmit}
-            defaultValues={defaultValues}
-            submitButtonText={id ? 'Сохранить' : 'Создать'}>
-            <>
-              {error && (
-                <Alert severity="error" onClose={() => setError(null)}>
-                  <AlertTitle>Произошла ошибка!</AlertTitle>
-                  {error.message}
-                </Alert>
-              )}
-              <FormContent />
-            </>
-          </Form>
-        ) : (
-          'Loading...'
+        {errorMsg && (
+          <Alert severity="error" onClose={() => setErrorMsg(null)}>
+            {errorMsg}
+          </Alert>
         )}
+        {isLoading ? null : <WordForm word={word} onSubmit={onSubmit} />}
       </DialogContent>
     </Dialog>
   );

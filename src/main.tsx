@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import { Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
@@ -9,11 +9,11 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Suspense fallback={<SuspenseFallback />}>
-      <App />
-    </Suspense>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Suspense fallback={<SuspenseFallback />}>
+    <App />
+  </Suspense>,
+  // </React.StrictMode>,
 );
 
 if (import.meta.env.PROD) {

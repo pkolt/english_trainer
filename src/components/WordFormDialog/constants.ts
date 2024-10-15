@@ -1,8 +1,8 @@
 import { WordType } from '@/services/words/types';
-import { Choices } from '../FormTextField';
 import { WORD_TYPE_TO_NAME } from '@/constants/word';
+import { Choice } from '@/types';
 
-export const WORD_TYPE_CHOICES: Choices = Object.values(WordType).map((value) => ({
+export const WORD_TYPE_CHOICES: Choice[] = Object.values(WordType).map((value) => ({
   label: WORD_TYPE_TO_NAME[value],
   value,
 }));
