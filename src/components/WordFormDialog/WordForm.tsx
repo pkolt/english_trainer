@@ -1,12 +1,13 @@
 import { Word } from '@/services/words/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getDefaultValues } from './utils';
+import { fixOnlyEnglish, fixOnlyRussian, getDefaultValues } from './utils';
 import { WordSchema } from '@/services/words/schema';
 import { Button, Checkbox, FormControlLabel, MenuItem, Stack, TextField } from '@mui/material';
 import { WORD_TYPE_CHOICES } from './constants';
 import { LoadingButton } from '@mui/lab';
 import { useMemo } from 'react';
+import { FormTextField } from '../Form/FormTextField';
 
 interface Props {
   word?: Word;
@@ -22,6 +23,7 @@ export const WordForm = ({ word, onSubmit }: Props) => {
     register,
     watch,
     reset,
+    control,
   } = useForm<Word>({
     mode: 'onChange',
     resolver: zodResolver(WordSchema),
@@ -40,15 +42,9 @@ export const WordForm = ({ word, onSubmit }: Props) => {
       inert={isSubmitting ? '' : undefined}
       marginTop={1}>
       <FormControlLabel control={<Checkbox checked={favorite} {...register('favorite')} />} label="Избранное" />
-      <TextField
-        label="Слово"
-        autoFocus
-        {...register('text')}
-        error={!!errors['text']}
-        helperText={errors['text']?.message}
-      />
-      <TextField label="Перевод" {...register('translate')} />
-      <TextField label="Транскрипция" {...register('transcription')} />
+      <FormTextField control={control} name="text" label="Слово" transform={fixOnlyEnglish} autoFocus />
+      <FormTextField control={control} name="translate" label="Перевод" transform={fixOnlyRussian} />
+      <FormTextField control={control} name="transcription" label="Транскрипция" />
       <TextField
         label="Тип"
         value={type}
@@ -62,8 +58,11 @@ export const WordForm = ({ word, onSubmit }: Props) => {
           </MenuItem>
         ))}
       </TextField>
-      <TextField label="Пример" {...register('example')} />
-      {!!example && <TextField label="Перевод примера" {...register('exampleTranslate')} />}
+
+      <FormTextField control={control} name="example" label="Пример" transform={fixOnlyEnglish} />
+      {!!example && (
+        <FormTextField control={control} name="exampleTranslate" label="Перевод примера" transform={fixOnlyRussian} />
+      )}
       <Stack direction="row" spacing={2}>
         <LoadingButton variant="contained" type="submit" loading={isSubmitting} disabled={!isValid || !isDirty}>
           {word ? 'Сохранить' : 'Создать'}
