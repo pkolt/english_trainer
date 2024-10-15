@@ -10,6 +10,8 @@ import { WORD_TYPE_TO_NAME } from '@/constants/word';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useDialogs } from '@toolpad/core/useDialogs';
 import WordFormDialog from '@/components/WordFormDialog';
+import StarRoundedIcon from '@mui/icons-material/StarRounded';
+import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 
 const Dictionary = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -33,6 +35,17 @@ const Dictionary = () => {
 
   const columns: GridColDef<Word>[] = [
     {
+      field: 'favorite',
+      headerName: '',
+      renderCell: ({ value }) => {
+        return (
+          <Box height="100%" display="flex" justifyContent="center" alignItems="center">
+            {value ? <StarRoundedIcon color="warning" /> : <StarBorderRoundedIcon color="disabled" />}
+          </Box>
+        );
+      },
+    },
+    {
       field: 'text',
       headerName: 'Слово',
       width: 150,
@@ -50,7 +63,7 @@ const Dictionary = () => {
     {
       field: 'type',
       headerName: 'Часть речи',
-      width: 250,
+      width: 150,
       valueGetter: (value?: WordType) => {
         return WORD_TYPE_TO_NAME[value as WordType] ?? '';
       },
@@ -58,7 +71,6 @@ const Dictionary = () => {
     {
       field: 'actions',
       headerName: 'Действия',
-      width: 150,
       type: 'actions',
       getActions: ({ row: { id, text } }) => {
         return [
