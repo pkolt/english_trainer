@@ -3,11 +3,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { fixOnlyEnglish, fixOnlyRussian, getDefaultValues } from './utils';
 import { WordSchema } from '@/services/words/schema';
-import { Button, Checkbox, FormControlLabel, MenuItem, Stack, TextField } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import { WORD_TYPE_CHOICES } from './constants';
 import { LoadingButton } from '@mui/lab';
 import { useMemo } from 'react';
 import { FormTextField } from '../Form/FormTextField';
+import { FormCheckboxField } from '../Form/FormCheckboxField';
+import { FormSelectField } from '../Form/FormSelectField';
+import { mergeDefaultValues } from '@/utils';
 
 interface Props {
   word?: Word;
@@ -15,12 +18,14 @@ interface Props {
 }
 
 export const WordForm = ({ word, onSubmit }: Props) => {
-  const defaultValues = useMemo(() => (word ? word : getDefaultValues()), [word]);
+  const defaultValues = useMemo(() => {
+    const defVals = getDefaultValues();
+    return word ? mergeDefaultValues(word, defVals) : defVals;
+  }, [word]);
 
   const {
-    formState: { isDirty, isValid, isSubmitting, errors },
+    formState: { isDirty, isValid, isSubmitting },
     handleSubmit,
-    register,
     watch,
     reset,
     control,
@@ -31,34 +36,19 @@ export const WordForm = ({ word, onSubmit }: Props) => {
   });
 
   const example = watch('example');
-  const favorite = watch('favorite');
-  const type = watch('type');
 
   return (
     <Stack
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      spacing={4}
+      spacing={2}
       inert={isSubmitting ? '' : undefined}
       marginTop={1}>
-      <FormControlLabel control={<Checkbox checked={favorite} {...register('favorite')} />} label="Избранное" />
+      <FormCheckboxField control={control} name="favorite" label="Избранное" />
       <FormTextField control={control} name="text" label="Слово" transform={fixOnlyEnglish} autoFocus />
       <FormTextField control={control} name="translate" label="Перевод" transform={fixOnlyRussian} />
       <FormTextField control={control} name="transcription" label="Транскрипция" />
-      <TextField
-        label="Тип"
-        value={type}
-        select
-        {...register('type')}
-        error={!!errors['type']}
-        helperText={errors['type']?.message}>
-        {WORD_TYPE_CHOICES.map((choice) => (
-          <MenuItem key={choice.value} selected={choice.value === type} value={choice.value}>
-            {choice.label}
-          </MenuItem>
-        ))}
-      </TextField>
-
+      <FormSelectField control={control} name="type" label="Тип" choices={WORD_TYPE_CHOICES} />
       <FormTextField control={control} name="example" label="Пример" transform={fixOnlyEnglish} />
       {!!example && (
         <FormTextField control={control} name="exampleTranslate" label="Перевод примера" transform={fixOnlyRussian} />

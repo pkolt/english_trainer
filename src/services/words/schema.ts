@@ -33,8 +33,8 @@ export const WordSchema = z
   .superRefine(async (obj, ctx) => {
     const { id, text, type } = obj;
     const words = await findByWord(obj.text);
-    const isMatch = words?.some((it) => it.id !== id && it.text === text && it.type === type);
-    if (isMatch) {
+    const isError = words?.some((it) => it.id !== id && it.text === text && it.type === type);
+    if (isError) {
       ctx.addIssue({
         path: ['text'],
         code: z.ZodIssueCode.custom,
