@@ -61,11 +61,11 @@ const Dictionary = () => {
       width: 150,
     },
     {
-      field: 'type',
+      field: 'types',
       headerName: 'Часть речи',
       width: 150,
-      valueGetter: (value?: WordType) => {
-        return WORD_TYPE_TO_NAME[value as WordType] ?? '';
+      valueGetter: (value: WordType[]) => {
+        return value.map((it) => WORD_TYPE_TO_NAME[it]).join(', ');
       },
     },
     {

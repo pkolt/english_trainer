@@ -8,6 +8,9 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
+// https://github.com/zloirock/core-js#new-set-methods
+import 'core-js/proposals/set-methods-v2';
+
 createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <Suspense fallback={<SuspenseFallback />}>

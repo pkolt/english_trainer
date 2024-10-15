@@ -48,7 +48,7 @@ export const WordForm = ({ word, onSubmit }: Props) => {
       <FormTextField control={control} name="text" label="Слово" transform={fixOnlyEnglish} autoFocus />
       <FormTextField control={control} name="translate" label="Перевод" transform={fixOnlyRussian} />
       <FormTextField control={control} name="transcription" label="Транскрипция" />
-      <FormSelectField control={control} name="type" label="Тип" choices={WORD_TYPE_CHOICES} />
+      <FormSelectField control={control} name="types" label="Тип" choices={WORD_TYPE_CHOICES} multiple />
       <FormTextField control={control} name="example" label="Пример" transform={fixOnlyEnglish} />
       {!!example && (
         <FormTextField control={control} name="exampleTranslate" label="Перевод примера" transform={fixOnlyRussian} />

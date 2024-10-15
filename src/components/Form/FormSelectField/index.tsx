@@ -4,9 +4,10 @@ import { Controller } from 'react-hook-form';
 
 interface Props {
   choices: Choice[];
+  multiple?: boolean;
 }
 
-export const FormSelectField: FormField<Props & TextFieldProps> = ({ name, control, choices, ...props }) => {
+export const FormSelectField: FormField<Props & TextFieldProps> = ({ name, control, choices, multiple, ...props }) => {
   return (
     <Controller
       control={control}
@@ -14,7 +15,18 @@ export const FormSelectField: FormField<Props & TextFieldProps> = ({ name, contr
       render={({ field, fieldState: { error } }) => {
         const { value } = field;
         return (
-          <TextField label="Тип" select error={!!error} helperText={error?.message} {...props} {...field}>
+          <TextField
+            label="Тип"
+            select
+            error={!!error}
+            helperText={error?.message}
+            slotProps={{
+              select: {
+                multiple,
+              },
+            }}
+            {...props}
+            {...field}>
             {choices.map((choice) => (
               <MenuItem key={choice.value} selected={choice.value === value} value={choice.value}>
                 {choice.label}

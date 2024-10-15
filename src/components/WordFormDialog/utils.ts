@@ -1,4 +1,4 @@
-import { Word, WordType } from '@/services/words/types';
+import { Word } from '@/services/words/types';
 import { DateTime } from 'luxon';
 
 export const getDefaultValues = (): Word => {
@@ -7,7 +7,7 @@ export const getDefaultValues = (): Word => {
     id: window.crypto.randomUUID(),
     createdAt: today,
     updatedAt: today,
-    type: WordType.None,
+    types: [],
     text: '',
     translate: '',
     transcription: '',
