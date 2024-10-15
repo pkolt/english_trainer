@@ -1,5 +1,5 @@
 import { openMyDB } from '../db';
-import { WORDS_STORE } from './constants';
+import { WORDS_STORE } from '../constants';
 import { Word } from './types';
 
 export const getWordList = async (): Promise<Word[]> => {
@@ -29,5 +29,5 @@ export const deleteWord = async (id: string): Promise<void> => {
 
 export const findByWord = async (text: string): Promise<Word[] | undefined> => {
   const db = await openMyDB();
-  return db.getAllFromIndex(WORDS_STORE, 'by-text', text);
+  return db.getAllFromIndex(WORDS_STORE, 'by-word', text);
 };

@@ -45,7 +45,7 @@ export const WordForm = ({ word, onSubmit }: Props) => {
       inert={isSubmitting ? '' : undefined}
       marginTop={1}>
       <FormCheckboxField control={control} name="favorite" label="Избранное" />
-      <FormTextField control={control} name="text" label="Слово" transform={fixOnlyEnglish} autoFocus />
+      <FormTextField control={control} name="word" label="Слово" transform={fixOnlyEnglish} autoFocus />
       <FormTextField control={control} name="translate" label="Перевод" transform={fixOnlyRussian} />
       <FormTextField control={control} name="transcription" label="Транскрипция" />
       <FormSelectField control={control} name="types" label="Тип" choices={WORD_TYPE_CHOICES} multiple />

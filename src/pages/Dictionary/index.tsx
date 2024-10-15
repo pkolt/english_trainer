@@ -3,7 +3,7 @@ import { Typography, Box, IconButton } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
 import { useCallback, useEffect, useState } from 'react';
-import { deleteWord, getWordList } from '@/services/words';
+import { deleteWord, getWordList } from '@/services/words/api';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { WORD_TYPE_TO_NAME } from '@/constants/word';
@@ -46,7 +46,7 @@ const Dictionary = () => {
       },
     },
     {
-      field: 'text',
+      field: 'word',
       headerName: 'Слово',
       width: 150,
     },
@@ -72,7 +72,7 @@ const Dictionary = () => {
       field: 'actions',
       headerName: 'Действия',
       type: 'actions',
-      getActions: ({ row: { id, text } }) => {
+      getActions: ({ row: { id, word } }) => {
         return [
           <GridActionsCellItem
             key="action-edit"
@@ -88,7 +88,7 @@ const Dictionary = () => {
             icon={<DeleteIcon color="error" />}
             label="Удалить"
             onClick={async () => {
-              const res = await dialogs.confirm(`Вы действительно хотите удалить слово "${text}" из словаря?`, {
+              const res = await dialogs.confirm(`Вы действительно хотите удалить слово "${word}" из словаря?`, {
                 title: 'Удалить слово',
                 okText: 'Да',
                 cancelText: 'Нет',
@@ -115,7 +115,7 @@ const Dictionary = () => {
 
   return (
     <DashboardPagesLayout>
-      <Typography variant="h2" marginBottom={2}>
+      <Typography variant="h4" marginBottom={2}>
         Словарь{' '}
         <IconButton color="success" title="Добавить слово" onClick={handleClickAddWord}>
           <AddCircleRoundedIcon fontSize="large" />

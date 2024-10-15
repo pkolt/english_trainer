@@ -1,6 +1,6 @@
 import { z } from '@/zod';
 import { Word, WordType } from './types';
-import { findByWord } from '.';
+import { findByWord } from './api';
 
 // Trainer
 // trainingSkip?: boolean;
@@ -15,7 +15,7 @@ export const WordSchema = z
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
     types: z.array(z.nativeEnum(WordType)),
-    text: z.string().min(1).trim(),
+    word: z.string().min(1).trim(),
     translate: z.string().min(1).trim(),
     transcription: z.string().trim(),
     description: z.string().trim(),
@@ -33,14 +33,14 @@ export const WordSchema = z
     pastParticiple: z.string().uuid().optional(),
   })
   .superRefine(async (obj, ctx) => {
-    const { id, text, types } = obj;
-    const words = await findByWord(obj.text);
+    const { id, word, types } = obj;
+    const words = await findByWord(obj.word);
     const isDuplicate = words?.some(
-      (it) => it.id !== id && it.text === text && new Set(it.types).isSubsetOf(new Set(types)),
+      (it) => it.id !== id && it.word === word && new Set(it.types).isSubsetOf(new Set(types)),
     );
     if (isDuplicate) {
       ctx.addIssue({
-        path: ['text' satisfies IssuePath],
+        path: ['word' satisfies IssuePath],
         code: z.ZodIssueCode.custom,
         message: 'Такое слово уже существует в словаре',
       });

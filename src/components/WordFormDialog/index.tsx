@@ -1,4 +1,4 @@
-import { createWord, readWord, updateWord } from '@/services/words';
+import { createWord, readWord, updateWord } from '@/services/words/api';
 import { Word } from '@/services/words/types';
 import { Alert, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { DateTime } from 'luxon';

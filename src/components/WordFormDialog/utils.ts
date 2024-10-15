@@ -8,7 +8,7 @@ export const getDefaultValues = (): Word => {
     createdAt: today,
     updatedAt: today,
     types: [],
-    text: '',
+    word: '',
     translate: '',
     transcription: '',
     description: '',
