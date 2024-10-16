@@ -6,8 +6,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { DialogProps } from '@toolpad/core/useDialogs';
 import CloseIcon from '@mui/icons-material/Close';
-import { getDefaultValues } from './utils';
 import { WordForm } from './WordForm';
+import { getWordDefaultValues } from '@/services/words/utils';
 
 const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | undefined>) => {
   const notifications = useNotifications();
@@ -47,7 +47,7 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
           }
           setWord(word);
         } else {
-          setWord(getDefaultValues());
+          setWord(getWordDefaultValues());
         }
         setLoading(false);
       } catch {

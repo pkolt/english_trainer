@@ -1,16 +1,17 @@
 import { Word } from '@/services/words/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { fixOnlyEnglish, fixOnlyRussian, getDefaultValues } from './utils';
+import { fixOnlyEnglish, fixOnlyRussian } from './utils';
 import { WordSchema } from '@/services/words/schema';
 import { Button, Stack } from '@mui/material';
 import { WORD_TYPE_CHOICES } from './constants';
 import { LoadingButton } from '@mui/lab';
 import { useMemo } from 'react';
-import { FormTextField } from '../Form/FormTextField';
-import { FormCheckboxField } from '../Form/FormCheckboxField';
-import { FormSelectField } from '../Form/FormSelectField';
-import { mergeDefaultValues } from '@/utils';
+import { FormTextField } from '@/components/Form/FormTextField';
+import { FormCheckboxField } from '@/components//Form/FormCheckboxField';
+import { FormSelectField } from '@/components//Form/FormSelectField';
+import { mergeValues } from '@/utils/form';
+import { getWordDefaultValues } from '@/services/words/utils';
 
 interface Props {
   word?: Word;
@@ -19,8 +20,8 @@ interface Props {
 
 export const WordForm = ({ word, onSubmit }: Props) => {
   const defaultValues = useMemo(() => {
-    const defVals = getDefaultValues();
-    return word ? mergeDefaultValues(word, defVals) : defVals;
+    const defVals = getWordDefaultValues();
+    return word ? mergeValues(word, defVals) : defVals;
   }, [word]);
 
   const {

@@ -1,5 +1,5 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
-import { Typography, Box, IconButton } from '@mui/material';
+import { Typography, Box, IconButton, Stack, Button } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
 import { useCallback, useEffect, useState } from 'react';
@@ -9,9 +9,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { WORD_TYPE_TO_NAME } from '@/constants/word';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useDialogs } from '@toolpad/core/useDialogs';
-import WordFormDialog from '@/components/WordFormDialog';
+import WordFormDialog from './WordFormDialog';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
+import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
+import { ImportWordsDialog } from './ImportWordsDialog';
 
 const Dictionary = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,7 +39,7 @@ const Dictionary = () => {
     {
       field: 'favorite',
       headerName: '',
-      renderCell: ({ value }) => {
+      renderCell({ value }) {
         return (
           <Box height="100%" display="flex" justifyContent="center" alignItems="center">
             {value ? <StarRoundedIcon color="warning" /> : <StarBorderRoundedIcon color="disabled" />}
@@ -54,6 +56,9 @@ const Dictionary = () => {
       field: 'transcription',
       headerName: 'Транскрипция',
       width: 150,
+      valueGetter(value: string) {
+        return `[${value}]`;
+      },
     },
     {
       field: 'translate',
@@ -64,7 +69,7 @@ const Dictionary = () => {
       field: 'types',
       headerName: 'Часть речи',
       width: 150,
-      valueGetter: (value: WordType[]) => {
+      valueGetter(value: WordType[]) {
         return value.map((it) => WORD_TYPE_TO_NAME[it]).join(', ');
       },
     },
@@ -72,7 +77,7 @@ const Dictionary = () => {
       field: 'actions',
       headerName: 'Действия',
       type: 'actions',
-      getActions: ({ row: { id, word } }) => {
+      getActions({ row: { id, word } }) {
         return [
           <GridActionsCellItem
             key="action-edit"
@@ -113,6 +118,11 @@ const Dictionary = () => {
     await fetchWordList();
   }, [dialogs, fetchWordList]);
 
+  const handleClickImport = useCallback(async () => {
+    await dialogs.open(ImportWordsDialog);
+    await fetchWordList();
+  }, [dialogs, fetchWordList]);
+
   return (
     <DashboardPagesLayout>
       <Typography variant="h4" marginBottom={2}>
@@ -121,6 +131,11 @@ const Dictionary = () => {
           <AddCircleRoundedIcon fontSize="large" />
         </IconButton>
       </Typography>
+      <Stack alignItems="start" marginBottom={1}>
+        <Button variant="outlined" startIcon={<GetAppRoundedIcon />} onClick={handleClickImport}>
+          Импорт
+        </Button>
+      </Stack>
       <Box width="100%" minHeight="400px">
         <DataGrid
           rows={wordList}

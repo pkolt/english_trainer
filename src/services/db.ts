@@ -30,7 +30,7 @@ export const openMyDB = async () => {
           keyPath: 'id',
           autoIncrement: false,
         });
-        tagStore.createIndex('by-name', 'name' satisfies keyof Tag);
+        tagStore.createIndex('by-name', 'name' satisfies keyof Tag, { unique: true });
       }
     },
     // upgrade(db, oldVersion, newVersion, transaction, event) {}

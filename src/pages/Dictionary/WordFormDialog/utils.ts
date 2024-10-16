@@ -1,24 +1,3 @@
-import { Word } from '@/services/words/types';
-import { DateTime } from 'luxon';
-
-export const getDefaultValues = (): Word => {
-  const today = DateTime.utc().toISO();
-  return {
-    id: window.crypto.randomUUID(),
-    createdAt: today,
-    updatedAt: today,
-    types: [],
-    word: '',
-    translate: '',
-    transcription: '',
-    description: '',
-    example: '',
-    exampleTranslate: '',
-    note: '',
-    favorite: false,
-  };
-};
-
 const EN_TO_RU: Record<string, string> = {
   q: 'й',
   w: 'ц',
