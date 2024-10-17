@@ -17,6 +17,7 @@ import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
 import { filterWordsBySearchText, filterWordsByTypes } from './utils';
 import { FilterByTypes } from './FilterByTypes';
+import { SpeakButton } from '@/components/SpeakButton';
 
 const Dictionary = () => {
   const [searchText, setSearchText] = useState('');
@@ -63,20 +64,21 @@ const Dictionary = () => {
     {
       field: 'word',
       headerName: 'Слово',
-      width: 150,
-    },
-    {
-      field: 'transcription',
-      headerName: 'Транскрипция',
-      width: 150,
-      valueGetter(value: string) {
-        return `[${value}]`;
+      width: 300,
+      renderCell({ value, row: { word, transcription } }) {
+        return (
+          <>
+            <SpeakButton text={value} />
+            <strong>{word}</strong>
+            {!!transcription && ` [${transcription}]`}
+          </>
+        );
       },
     },
     {
       field: 'translate',
       headerName: 'Перевод',
-      width: 150,
+      width: 250,
     },
     {
       field: 'types',

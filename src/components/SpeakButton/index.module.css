@@ -1,0 +1,19 @@
+@keyframes speaking {
+  0% {
+    scale: 1;
+    rotate: 0;
+  }
+
+  50% {
+    rotate: 5deg;
+  }
+
+  100% {
+    scale: 1.4;
+    rotate: -5deg;
+  }
+}
+
+.speaking {
+  animation: speaking 500ms ease-in-out infinite alternate;
+}
