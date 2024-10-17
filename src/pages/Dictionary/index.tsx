@@ -1,19 +1,5 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
-import {
-  Typography,
-  Box,
-  IconButton,
-  Button,
-  Input,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  ListItemText,
-  Checkbox,
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-} from '@mui/material';
+import { Typography, Box, IconButton, Button, Input } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -30,7 +16,7 @@ import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
 import { filterWordsBySearchText, filterWordsByTypes } from './utils';
-import { WORD_TYPE_CHOICES } from '@/constants/form';
+import { FilterByTypes } from './FilterByTypes';
 
 const Dictionary = () => {
   const [searchText, setSearchText] = useState('');
@@ -154,10 +140,6 @@ const Dictionary = () => {
     setSearchText(event.target.value);
   }, []);
 
-  const handleChangeWordTypes = useCallback((event: SelectChangeEvent<WordType[]>) => {
-    setWordTypes(event.target.value as unknown as WordType[]);
-  }, []);
-
   const handleClickReset = useCallback(() => {
     setSearchText('');
     setWordTypes([]);
@@ -181,25 +163,7 @@ const Dictionary = () => {
             value={searchText}
             onChange={handleChangeSearch}
           />
-          <FormControl size="small" sx={{ minWidth: '170px', maxWidth: '300px' }}>
-            <InputLabel>Фильтр по типу</InputLabel>
-            <Select
-              multiple
-              value={wordTypes}
-              onChange={handleChangeWordTypes}
-              input={<OutlinedInput label="Фильтр по типу" />}
-              renderValue={(selected) => selected.map((it) => WORD_TYPE_TO_NAME[it]).join(', ')}>
-              {WORD_TYPE_CHOICES.map((it) => {
-                const selected = wordTypes.includes(it.value as WordType);
-                return (
-                  <MenuItem key={it.value} value={it.value}>
-                    <Checkbox checked={selected} />
-                    <ListItemText primary={it.label} />
-                  </MenuItem>
-                );
-              })}
-            </Select>
-          </FormControl>
+          <FilterByTypes value={wordTypes} onChange={setWordTypes} />
           {isUsedFilter && (
             <Button variant="outlined" onClick={handleClickReset}>
               Сброс

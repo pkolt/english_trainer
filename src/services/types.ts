@@ -1,5 +1,5 @@
 import { DBSchema } from 'idb';
-import { Word } from './words/types';
+import { Word, WordType } from './words/types';
 import { TAGS_STORE, WORDS_STORE } from './constants';
 import { Tag } from './tags/types';
 
@@ -10,6 +10,7 @@ export interface MyDB extends DBSchema {
     indexes: {
       'by-word': string;
       'by-translate': string;
+      'by-types': WordType[];
     };
   };
   [TAGS_STORE]: {

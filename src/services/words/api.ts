@@ -1,6 +1,6 @@
 import { openMyDB } from '../db';
 import { WORDS_STORE } from '../constants';
-import { Word } from './types';
+import { Word, WordType } from './types';
 
 export const getWordList = async (): Promise<Word[]> => {
   const db = await openMyDB();
@@ -35,4 +35,9 @@ export const findAllByWord = async (text: string): Promise<Word[] | undefined> =
 export const findByWord = async (text: string): Promise<Word | undefined> => {
   const db = await openMyDB();
   return db.getFromIndex(WORDS_STORE, 'by-word', text);
+};
+
+export const getCountWordByType = async (wordType: WordType): Promise<number> => {
+  const db = await openMyDB();
+  return db.countFromIndex(WORDS_STORE, 'by-types', [wordType]);
 };

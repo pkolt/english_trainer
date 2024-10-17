@@ -22,7 +22,8 @@ export const openMyDB = async () => {
           autoIncrement: false,
         });
         wordStore.createIndex('by-word', 'word' satisfies keyof Word);
-        wordStore.createIndex('by-translate', 'translate');
+        wordStore.createIndex('by-translate', 'translate' satisfies keyof Word);
+        wordStore.createIndex('by-types', 'types' satisfies keyof Word);
       }
 
       if (!db.objectStoreNames.contains(TAGS_STORE)) {
