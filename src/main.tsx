@@ -10,6 +10,8 @@ import '@fontsource/roboto/700.css';
 
 // https://github.com/zloirock/core-js#new-set-methods
 import 'core-js/proposals/set-methods-v2';
+// https://github.com/zloirock/core-js#change-array-by-copy
+import 'core-js/proposals/change-array-by-copy-stage-4';
 
 createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>

@@ -19,3 +19,11 @@ export const filterWordsByTypes = (list: Word[], types: WordType[]): Word[] => {
   }
   return list;
 };
+
+export const orderWordsByAbc = (list: Word[]): Word[] => {
+  return list.toSorted((a, b) => a.word.localeCompare(b.word));
+};
+
+export const orderWordsByFavorite = (list: Word[]): Word[] => {
+  return list.toSorted((a, b) => Number(b.favorite) - Number(a.favorite));
+};

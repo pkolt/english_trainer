@@ -15,7 +15,7 @@ import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
-import { filterWordsBySearchText, filterWordsByTypes } from './utils';
+import { filterWordsBySearchText, filterWordsByTypes, orderWordsByFavorite, orderWordsByAbc } from './utils';
 import { FilterByTypes } from './FilterByTypes';
 import { SpeakButton } from '@/components/SpeakButton';
 
@@ -32,6 +32,8 @@ const Dictionary = () => {
   const filteredWordList = useMemo(() => {
     let result = filterWordsBySearchText(wordList, searchText);
     result = filterWordsByTypes(result, wordTypes);
+    result = orderWordsByAbc(result);
+    result = orderWordsByFavorite(result);
     return result;
   }, [searchText, wordList, wordTypes]);
 
