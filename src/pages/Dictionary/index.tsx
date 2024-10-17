@@ -1,5 +1,19 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
-import { Typography, Box, IconButton, Button, Input } from '@mui/material';
+import {
+  Typography,
+  Box,
+  IconButton,
+  Button,
+  Input,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  ListItemText,
+  Checkbox,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+} from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -15,10 +29,12 @@ import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
-import { filterWordsBySearchText } from './utils';
+import { filterWordsBySearchText, filterWordsByTypes } from './utils';
+import { WORD_TYPE_CHOICES } from '@/constants/form';
 
 const Dictionary = () => {
   const [searchText, setSearchText] = useState('');
+  const [wordTypes, setWordTypes] = useState<WordType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [wordList, setWordList] = useState<Word[]>([]);
   const [paginationModel, setPaginationModel] = useState({
@@ -26,7 +42,13 @@ const Dictionary = () => {
     page: 0,
   });
 
-  const filteredWordList = useMemo(() => filterWordsBySearchText(wordList, searchText), [searchText, wordList]);
+  const filteredWordList = useMemo(() => {
+    let result = filterWordsBySearchText(wordList, searchText);
+    result = filterWordsByTypes(result, wordTypes);
+    return result;
+  }, [searchText, wordList, wordTypes]);
+
+  const isUsedFilter: boolean = !!searchText.trim() || wordTypes.length > 0;
 
   const fetchWordList = useCallback(async () => {
     setIsLoading(true);
@@ -72,7 +94,7 @@ const Dictionary = () => {
     },
     {
       field: 'types',
-      headerName: 'Часть речи',
+      headerName: 'Тип',
       width: 150,
       valueGetter(value: WordType[]) {
         return value.map((it) => WORD_TYPE_TO_NAME[it]).join(', ');
@@ -132,6 +154,15 @@ const Dictionary = () => {
     setSearchText(event.target.value);
   }, []);
 
+  const handleChangeWordTypes = useCallback((event: SelectChangeEvent<WordType[]>) => {
+    setWordTypes(event.target.value as unknown as WordType[]);
+  }, []);
+
+  const handleClickReset = useCallback(() => {
+    setSearchText('');
+    setWordTypes([]);
+  }, []);
+
   return (
     <DashboardPagesLayout>
       <Typography variant="h4" marginBottom={2}>
@@ -141,13 +172,40 @@ const Dictionary = () => {
         </IconButton>
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 1, gap: 2 }}>
-        <Input
-          type="search"
-          startAdornment={<SearchIcon />}
-          color="primary"
-          placeholder="Поиск"
-          onChange={handleChangeSearch}
-        />
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Input
+            type="search"
+            startAdornment={<SearchIcon />}
+            color="primary"
+            placeholder="Поиск"
+            value={searchText}
+            onChange={handleChangeSearch}
+          />
+          <FormControl size="small" sx={{ minWidth: '170px', maxWidth: '300px' }}>
+            <InputLabel>Фильтр по типу</InputLabel>
+            <Select
+              multiple
+              value={wordTypes}
+              onChange={handleChangeWordTypes}
+              input={<OutlinedInput label="Фильтр по типу" />}
+              renderValue={(selected) => selected.map((it) => WORD_TYPE_TO_NAME[it]).join(', ')}>
+              {WORD_TYPE_CHOICES.map((it) => {
+                const selected = wordTypes.includes(it.value as WordType);
+                return (
+                  <MenuItem key={it.value} value={it.value}>
+                    <Checkbox checked={selected} />
+                    <ListItemText primary={it.label} />
+                  </MenuItem>
+                );
+              })}
+            </Select>
+          </FormControl>
+          {isUsedFilter && (
+            <Button variant="outlined" onClick={handleClickReset}>
+              Сброс
+            </Button>
+          )}
+        </Box>
         <Button variant="outlined" startIcon={<GetAppRoundedIcon />} onClick={handleClickImport}>
           Импорт
         </Button>
