@@ -1,8 +1,8 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
-import { Typography, Box, IconButton, Stack, Button } from '@mui/material';
+import { Typography, Box, IconButton, Button, Input } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { deleteWord, getWordList } from '@/services/words/api';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,14 +14,19 @@ import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
+import SearchIcon from '@mui/icons-material/Search';
+import { filterWordsBySearchText } from './utils';
 
 const Dictionary = () => {
+  const [searchText, setSearchText] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [wordList, setWordList] = useState<Word[]>([]);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 25,
     page: 0,
   });
+
+  const filteredWordList = useMemo(() => filterWordsBySearchText(wordList, searchText), [searchText, wordList]);
 
   const fetchWordList = useCallback(async () => {
     setIsLoading(true);
@@ -123,6 +128,10 @@ const Dictionary = () => {
     await fetchWordList();
   }, [dialogs, fetchWordList]);
 
+  const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(event.target.value);
+  }, []);
+
   return (
     <DashboardPagesLayout>
       <Typography variant="h4" marginBottom={2}>
@@ -131,14 +140,21 @@ const Dictionary = () => {
           <AddCircleRoundedIcon fontSize="large" />
         </IconButton>
       </Typography>
-      <Stack alignItems="start" marginBottom={1}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 1, gap: 2 }}>
+        <Input
+          type="search"
+          startAdornment={<SearchIcon />}
+          color="primary"
+          placeholder="Поиск"
+          onChange={handleChangeSearch}
+        />
         <Button variant="outlined" startIcon={<GetAppRoundedIcon />} onClick={handleClickImport}>
           Импорт
         </Button>
-      </Stack>
+      </Box>
       <Box width="100%" minHeight="400px">
         <DataGrid
-          rows={wordList}
+          rows={filteredWordList}
           loading={isLoading}
           slotProps={{
             loadingOverlay: {
