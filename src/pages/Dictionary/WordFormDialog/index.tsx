@@ -1,60 +1,36 @@
-import { createWord, readWord, updateWord } from '@/services/words/api';
 import { Word } from '@/services/words/types';
 import { Alert, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { DateTime } from 'luxon';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { DialogProps } from '@toolpad/core/useDialogs';
 import CloseIcon from '@mui/icons-material/Close';
 import { WordForm } from './WordForm';
-import { getWordDefaultValues } from '@/services/words/utils';
+import { useCreateWord, useReadWord, useUpdateWord } from '@/services/words/hooks';
 
 const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | undefined>) => {
   const notifications = useNotifications();
-  const [isLoading, setLoading] = useState(true);
-  const [word, setWord] = useState<Word | undefined>(undefined);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const { data: word, isLoading, error: readError } = useReadWord(id!, !!id);
+  const { mutateAsync: createWord, error: createError } = useCreateWord();
+  const { mutateAsync: updateWord, error: updateError } = useUpdateWord();
+
+  const error = readError || createError || updateError;
 
   const onSubmit = useCallback(
     async (data: Word) => {
-      setErrorMsg(null); // Reset state
-      try {
-        if (id) {
-          await updateWord({ ...data, updatedAt: DateTime.utc().toISO() });
-          onClose();
-        } else {
-          await createWord(data);
-          notifications.show('Новое слово добавлено!', {
-            severity: 'success',
-            autoHideDuration: 3000,
-          });
-          onClose();
-        }
-      } catch {
-        setErrorMsg('Ошибка при сохранении данных!');
+      if (id) {
+        await updateWord({ ...data, updatedAt: DateTime.utc().toISO() });
+      } else {
+        await createWord(data);
+        notifications.show('Новое слово добавлено!', {
+          severity: 'success',
+          autoHideDuration: 3000,
+        });
       }
+      onClose();
     },
-    [id, notifications, onClose],
+    [createWord, id, notifications, onClose, updateWord],
   );
-
-  useEffect(() => {
-    (async () => {
-      try {
-        if (id) {
-          const word = await readWord(id);
-          if (!word) {
-            throw new Error('Word not exists!');
-          }
-          setWord(word);
-        } else {
-          setWord(getWordDefaultValues());
-        }
-        setLoading(false);
-      } catch {
-        setErrorMsg('Ошибка при загрузки данных!');
-      }
-    })();
-  }, [id]);
 
   return (
     <Dialog fullWidth open={open} onClose={() => onClose()}>
@@ -65,11 +41,7 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        {errorMsg && (
-          <Alert severity="error" onClose={() => setErrorMsg(null)}>
-            {errorMsg}
-          </Alert>
-        )}
+        {error && <Alert severity="error">{error.message}</Alert>}
         {isLoading ? null : <WordForm word={word} onSubmit={onSubmit} />}
       </DialogContent>
     </Dialog>

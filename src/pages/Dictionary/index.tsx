@@ -2,8 +2,7 @@ import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
 import { Typography, Box, IconButton, Button, Input } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { deleteWord, getWordList } from '@/services/words/api';
+import { useCallback, useMemo, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { WORD_TYPE_TO_NAME } from '@/constants/word';
@@ -18,19 +17,20 @@ import SearchIcon from '@mui/icons-material/Search';
 import { filterWordsBySearchText, filterWordsByTypes, orderWordsByFavorite, orderWordsByAbc } from './utils';
 import { FilterByTypes } from './FilterByTypes';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
+import { useDeleteWord, useGetWordList } from '@/services/words/hooks';
 
 const Dictionary = () => {
+  const { data: wordList, isLoading } = useGetWordList();
+  const { mutate: deleteWord } = useDeleteWord();
   const [searchText, setSearchText] = useState('');
   const [wordTypes, setWordTypes] = useState<WordType[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [wordList, setWordList] = useState<Word[]>([]);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 25,
     page: 0,
   });
 
   const filteredWordList = useMemo(() => {
-    let result = filterWordsBySearchText(wordList, searchText);
+    let result = filterWordsBySearchText(wordList ?? [], searchText);
     result = filterWordsByTypes(result, wordTypes);
     result = orderWordsByAbc(result);
     result = orderWordsByFavorite(result);
@@ -38,16 +38,6 @@ const Dictionary = () => {
   }, [searchText, wordList, wordTypes]);
 
   const isUsedFilter: boolean = !!searchText.trim() || wordTypes.length > 0;
-
-  const fetchWordList = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const res = await getWordList();
-      setWordList(res);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
 
   const dialogs = useDialogs();
 
@@ -100,9 +90,8 @@ const Dictionary = () => {
             key="action-edit"
             icon={<EditIcon color="primary" />}
             label="Изменить"
-            onClick={async () => {
-              await dialogs.open(WordFormDialog, id);
-              await fetchWordList();
+            onClick={() => {
+              dialogs.open(WordFormDialog, id);
             }}
           />,
           <GridActionsCellItem
@@ -116,8 +105,7 @@ const Dictionary = () => {
                 cancelText: 'Нет',
               });
               if (res) {
-                await deleteWord(id);
-                await fetchWordList();
+                deleteWord(id);
               }
             }}
           />,
@@ -126,19 +114,13 @@ const Dictionary = () => {
     },
   ];
 
-  useEffect(() => {
-    fetchWordList();
-  }, [fetchWordList]);
+  const handleClickAddWord = useCallback(() => {
+    dialogs.open(WordFormDialog);
+  }, [dialogs]);
 
-  const handleClickAddWord = useCallback(async () => {
-    await dialogs.open(WordFormDialog);
-    await fetchWordList();
-  }, [dialogs, fetchWordList]);
-
-  const handleClickImport = useCallback(async () => {
-    await dialogs.open(ImportWordsDialog);
-    await fetchWordList();
-  }, [dialogs, fetchWordList]);
+  const handleClickImport = useCallback(() => {
+    dialogs.open(ImportWordsDialog);
+  }, [dialogs]);
 
   const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
