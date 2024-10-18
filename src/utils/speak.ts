@@ -23,13 +23,14 @@ export const getReadySpeak = async (): Promise<boolean> => {
   return _ready;
 };
 
-export const speakEnglishText = async (text: string): Promise<void> => {
+export const speakText = async (text: string, voiceURI: string): Promise<void> => {
   if (speechSynthesis.speaking) {
     return;
   }
   const voices = speechSynthesis.getVoices();
-  const voice = voices.filter((it) => it.lang === 'en-US' && it.name.startsWith('Google'))[0];
+  const voice = voices.filter((it) => it.voiceURI === voiceURI)[0];
   if (!voice) {
+    console.error(`Not found voice: ${voiceURI}`);
     return;
   }
   return new Promise((resolve) => {

@@ -17,7 +17,7 @@ import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
 import { filterWordsBySearchText, filterWordsByTypes, orderWordsByFavorite, orderWordsByAbc } from './utils';
 import { FilterByTypes } from './FilterByTypes';
-import { SpeakButton } from '@/components/SpeakButton';
+import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
 
 const Dictionary = () => {
   const [searchText, setSearchText] = useState('');
@@ -70,7 +70,7 @@ const Dictionary = () => {
       renderCell({ value, row: { word, transcription } }) {
         return (
           <>
-            <SpeakButton text={value} />
+            <SimpleSpeakButton text={value} />
             <strong>{word}</strong>
             {!!transcription && ` [${transcription}]`}
           </>

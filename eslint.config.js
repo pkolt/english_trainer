@@ -53,7 +53,7 @@ export default [
         },
       ],
 
-      'no-console': ['error'],
+      'no-console': ['error', { allow: ['warn', 'error'] }],
       'react/react-in-jsx-scope': ['off'],
       'react/prop-types': ['off'],
       'object-shorthand': ['error', 'properties'],
