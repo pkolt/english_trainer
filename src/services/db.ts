@@ -7,14 +7,14 @@ import { Tag } from './tags/types';
 const DB_NAME = 'english-trainer';
 const DB_VERSION = 1;
 
-let _cachedDB: MyDB;
+export let db: MyDB;
 
-export const openMyDB = async (): Promise<MyDB> => {
-  if (_cachedDB) {
-    return _cachedDB;
+export const getReadyMyDB = async (): Promise<void> => {
+  if (db) {
+    return;
   }
 
-  const db = await openDB<MyDBSchema>(DB_NAME, DB_VERSION, {
+  db = await openDB<MyDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(StoreName.Words)) {
         const wordStore = db.createObjectStore(StoreName.Words, {
@@ -40,8 +40,4 @@ export const openMyDB = async (): Promise<MyDB> => {
     // blocking(currentVersion, blockedVersion, event) {},
     // terminated() {},
   });
-
-  _cachedDB = db;
-
-  return db;
 };

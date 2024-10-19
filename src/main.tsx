@@ -12,15 +12,18 @@ import '@fontsource/roboto/700.css';
 import 'core-js/proposals/set-methods-v2';
 // https://github.com/zloirock/core-js#change-array-by-copy
 import 'core-js/proposals/change-array-by-copy-stage-4';
+import { getReadyMyDB } from './services/db.ts';
 
-createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
-  <Suspense fallback={<SuspenseFallback />}>
-    <App />
-  </Suspense>,
-  // </React.StrictMode>,
-);
+getReadyMyDB().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    // <React.StrictMode>
+    <Suspense fallback={<SuspenseFallback />}>
+      <App />
+    </Suspense>,
+    // </React.StrictMode>,
+  );
 
-if (import.meta.env.PROD) {
-  import('./service-worker-register.ts');
-}
+  if (import.meta.env.PROD) {
+    import('./service-worker-register.ts');
+  }
+});
