@@ -1,7 +1,7 @@
 import { Word } from '@/services/words/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { fixOnlyEnglish, fixOnlyRussian } from './utils';
+import { fixOnlyEnglish, fixOnlyRussian } from '../../../utils/keyboard';
 import { WordSchema } from '@/services/words/schema';
 import { Button, Stack } from '@mui/material';
 import { WORD_TYPE_CHOICES } from '../../../constants/form';
@@ -12,6 +12,8 @@ import { FormCheckboxField } from '@/components//Form/FormCheckboxField';
 import { FormSelectField } from '@/components//Form/FormSelectField';
 import { mergeValues } from '@/utils/form';
 import { getWordDefaultValues } from '@/services/words/utils';
+import { useGetTagList } from '@/services/tags/hooks';
+import { Choice } from '@/types';
 
 interface Props {
   word?: Word;
@@ -19,6 +21,12 @@ interface Props {
 }
 
 export const WordForm = ({ word, onSubmit }: Props) => {
+  const { data: tagList } = useGetTagList();
+
+  const tagChoices = useMemo<Choice[]>(() => {
+    return (tagList ?? []).map((it) => ({ label: it.name, value: it.id }));
+  }, [tagList]);
+
   const defaultValues = useMemo(() => {
     const defVals = getWordDefaultValues();
     return word ? mergeValues(word, defVals) : defVals;
@@ -50,6 +58,7 @@ export const WordForm = ({ word, onSubmit }: Props) => {
       <FormTextField control={control} name="translate" label="Перевод" transform={fixOnlyRussian} />
       <FormTextField control={control} name="transcription" label="Транскрипция" />
       <FormSelectField control={control} name="types" label="Тип" choices={WORD_TYPE_CHOICES} multiple />
+      <FormSelectField control={control} name="tags" label="Теги" choices={tagChoices} multiple />
       <FormTextField control={control} name="example" label="Пример" transform={fixOnlyEnglish} />
       {!!example && (
         <FormTextField control={control} name="exampleTranslate" label="Перевод примера" transform={fixOnlyRussian} />
