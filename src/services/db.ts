@@ -1,5 +1,5 @@
-import { openDB, IDBPDatabase } from 'idb';
-import { MyDB } from './types';
+import { openDB } from 'idb';
+import { MyDBSchema, MyDB } from './types';
 import { TAGS_STORE, WORDS_STORE } from './constants';
 import { Word } from './words/types';
 import { Tag } from './tags/types';
@@ -7,14 +7,14 @@ import { Tag } from './tags/types';
 const DB_NAME = 'english-trainer';
 const DB_VERSION = 1;
 
-let _cachedDB: IDBPDatabase<MyDB>;
+let _cachedDB: MyDB;
 
-export const openMyDB = async () => {
+export const openMyDB = async (): Promise<MyDB> => {
   if (_cachedDB) {
     return _cachedDB;
   }
 
-  const db = await openDB<MyDB>(DB_NAME, DB_VERSION, {
+  const db = await openDB<MyDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       if (!db.objectStoreNames.contains(WORDS_STORE)) {
         const wordStore = db.createObjectStore(WORDS_STORE, {

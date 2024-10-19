@@ -1,9 +1,9 @@
-import { DBSchema } from 'idb';
+import { DBSchema, IDBPDatabase } from 'idb';
 import { Word, WordType } from './words/types';
 import { TAGS_STORE, WORDS_STORE } from './constants';
 import { Tag } from './tags/types';
 
-export interface MyDB extends DBSchema {
+export interface MyDBSchema extends DBSchema {
   [WORDS_STORE]: {
     key: string;
     value: Word;
@@ -21,3 +21,5 @@ export interface MyDB extends DBSchema {
     };
   };
 }
+
+export type MyDB = IDBPDatabase<MyDBSchema>;
