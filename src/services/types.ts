@@ -1,19 +1,20 @@
 import { DBSchema, IDBPDatabase } from 'idb';
 import { Word, WordType } from './words/types';
-import { TAGS_STORE, WORDS_STORE } from './constants';
+import { StoreName } from './constants';
 import { Tag } from './tags/types';
 
 export interface MyDBSchema extends DBSchema {
-  [WORDS_STORE]: {
+  [StoreName.Words]: {
     key: string;
     value: Word;
     indexes: {
       'by-word': string;
       'by-translate': string;
       'by-types': WordType[];
+      'by-tags': string[];
     };
   };
-  [TAGS_STORE]: {
+  [StoreName.Tags]: {
     key: string;
     value: Tag;
     indexes: {

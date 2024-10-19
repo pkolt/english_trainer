@@ -2,8 +2,6 @@ import { Alert, Stack } from '@mui/material';
 import { useCallback, useState } from 'react';
 import { FileUploadButton } from '@/components/Form/FileUploadButton';
 import { importDataFromFile } from '@/utils/file';
-import { queryClient } from '@/services/queryClient';
-import { QK_GET_WORD_LIST } from '@/services/words/constants';
 
 export const ImportWordsForm = () => {
   const [isDisabled, setIsDisabled] = useState(false);
@@ -18,7 +16,6 @@ export const ImportWordsForm = () => {
         if (typeof reader.result === 'string') {
           const data = JSON.parse(reader.result);
           setResult(await importDataFromFile(data));
-          queryClient.invalidateQueries({ queryKey: [QK_GET_WORD_LIST] });
         }
       });
       reader.readAsText(file);

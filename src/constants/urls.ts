@@ -3,4 +3,5 @@ export enum PageUrl {
   Dictionary = '/dictionary',
   Exercises = '/exercises',
   Settings = '/settings',
+  Tags = '/tags',
 }

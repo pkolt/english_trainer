@@ -6,6 +6,8 @@ import { z } from '@/zod';
 import { mergeValues } from './form';
 import { getTagDefaultValues } from '@/services/tags/utils';
 import { getWordDefaultValues } from '@/services/words/utils';
+import { queryClient } from '@/services/queryClient';
+import { QueryKey } from '@/services/constants';
 
 const ImportTagSchema = TagSchema.pick({ id: true, name: true });
 type ImportTag = z.infer<typeof ImportTagSchema>;
@@ -36,15 +38,17 @@ export const importDataFromFile = async (data: unknown): Promise<boolean> => {
     for (const tag of data.tags) {
       const isExistsTag: boolean = !!(await findByTag(tag.name));
       if (!isExistsTag) {
-        await createTag(mergeValues(tag, getTagDefaultValues()));
+        await createTag(mergeValues(tag, getTagDefaultValues()), true);
       }
     }
     for (const word of data.words) {
       const isExistsWord: boolean = !!(await findByWord(word.word));
       if (!isExistsWord) {
-        await createWord(mergeValues(word, getWordDefaultValues()));
+        await createWord(mergeValues(word, getWordDefaultValues()), true);
       }
     }
+    await queryClient.invalidateQueries({ queryKey: [QueryKey.GetTagList] });
+    await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordList] });
   }
   return isValidFile;
 };

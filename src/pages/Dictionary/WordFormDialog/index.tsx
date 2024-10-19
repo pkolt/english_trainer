@@ -10,7 +10,7 @@ import { useCreateWord, useReadWord, useUpdateWord } from '@/services/words/hook
 
 const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | undefined>) => {
   const notifications = useNotifications();
-  const { data: word, isLoading, error: readError } = useReadWord(id!, !!id);
+  const { data: word, isLoading, error: readError } = useReadWord(id!, !id);
   const { mutateAsync: createWord, error: createError } = useCreateWord();
   const { mutateAsync: updateWord, error: updateError } = useUpdateWord();
 

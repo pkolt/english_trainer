@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 import { MyDBSchema, MyDB } from './types';
-import { TAGS_STORE, WORDS_STORE } from './constants';
+import { StoreName } from './constants';
 import { Word } from './words/types';
 import { Tag } from './tags/types';
 
@@ -16,18 +16,19 @@ export const openMyDB = async (): Promise<MyDB> => {
 
   const db = await openDB<MyDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
-      if (!db.objectStoreNames.contains(WORDS_STORE)) {
-        const wordStore = db.createObjectStore(WORDS_STORE, {
+      if (!db.objectStoreNames.contains(StoreName.Words)) {
+        const wordStore = db.createObjectStore(StoreName.Words, {
           keyPath: 'id',
           autoIncrement: false,
         });
         wordStore.createIndex('by-word', 'word' satisfies keyof Word);
         wordStore.createIndex('by-translate', 'translate' satisfies keyof Word);
         wordStore.createIndex('by-types', 'types' satisfies keyof Word);
+        wordStore.createIndex('by-tags', 'tags' satisfies keyof Word);
       }
 
-      if (!db.objectStoreNames.contains(TAGS_STORE)) {
-        const tagStore = db.createObjectStore(TAGS_STORE, {
+      if (!db.objectStoreNames.contains(StoreName.Tags)) {
+        const tagStore = db.createObjectStore(StoreName.Tags, {
           keyPath: 'id',
           autoIncrement: false,
         });

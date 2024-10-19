@@ -7,6 +7,7 @@ const Home = lazy(() => import('./pages/Home'));
 const Dictionary = lazy(() => import('./pages/Dictionary'));
 const Exercises = lazy(() => import('./pages/Exercises'));
 const Settings = lazy(() => import('./pages/Settings'));
+const Tags = lazy(() => import('./pages/Tags'));
 
 export const router = createBrowserRouter(
   [
@@ -25,6 +26,10 @@ export const router = createBrowserRouter(
     {
       path: PageUrl.Settings,
       element: <Settings />,
+    },
+    {
+      path: PageUrl.Tags,
+      element: <Tags />,
     },
     {
       path: '*',

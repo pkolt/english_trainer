@@ -5,7 +5,7 @@ export const queryClient = new QueryClient({
     queries: {
       staleTime: Infinity, // No refetch on mount useQuery
       gcTime: 1000 * 60 * 5, // Clear garbage collector time
-      refetchOnMount: false,
+      // refetchOnMount: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
       refetchInterval: false,

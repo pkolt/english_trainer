@@ -13,6 +13,7 @@ import { ruRU as dataGridRuRu } from '@mui/x-data-grid/locales';
 import { ruRU as coreRuRu } from '@mui/material/locale';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from './services/queryClient';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const theme = createTheme({}, dataGridRuRu, coreRuRu);
 
@@ -30,6 +31,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <CssBaseline />
+      <ReactQueryDevtools initialIsOpen={false} />
       <AppProvider branding={BRANDING} navigation={NAVIGATION} router={muiRouter}>
         <ThemeProvider theme={theme}>
           <DialogsProvider>
