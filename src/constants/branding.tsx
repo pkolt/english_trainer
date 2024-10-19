@@ -1,7 +1,7 @@
 import { Branding } from '@toolpad/core';
-import LanguageIcon from '@mui/icons-material/Language';
+import RecordVoiceOverRoundedIcon from '@mui/icons-material/RecordVoiceOverRounded';
 
 export const BRANDING: Branding = {
   title: 'English Trainer',
-  logo: <LanguageIcon fontSize="large" color="primary" />,
+  logo: <RecordVoiceOverRoundedIcon fontSize="large" color="primary" />,
 };
