@@ -14,16 +14,27 @@ import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
-import { filterWordsBySearchText, filterWordsByTypes, orderWordsByFavorite, orderWordsByAbc } from './utils';
-import { FilterByTypes } from './FilterByTypes';
+import {
+  filterWordsBySearchText,
+  filterWordsByTypes,
+  orderWordsByFavorite,
+  orderWordsByAbc,
+  convertTagListToChoices,
+  filterWordsByTagIds,
+} from './utils';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
-import { useDeleteWord, useGetWordList } from '@/services/words/hooks';
+import { useDeleteWord, useGetWordList, useGetWordTypeChoices } from '@/services/words/hooks';
+import { SelectField } from '@/components/Form/SelectField';
+import { useGetTagList } from '@/services/tags/hooks';
 
 const Dictionary = () => {
+  const { data: wordTypeChoices } = useGetWordTypeChoices();
+  const { data: tagList } = useGetTagList();
   const { data: wordList, isLoading } = useGetWordList();
   const { mutate: deleteWord } = useDeleteWord();
   const [searchText, setSearchText] = useState('');
   const [wordTypes, setWordTypes] = useState<WordType[]>([]);
+  const [tagIds, setTagIds] = useState<string[]>([]);
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 25,
     page: 0,
@@ -32,12 +43,17 @@ const Dictionary = () => {
   const filteredWordList = useMemo(() => {
     let result = filterWordsBySearchText(wordList ?? [], searchText);
     result = filterWordsByTypes(result, wordTypes);
+    result = filterWordsByTagIds(result, tagIds);
     result = orderWordsByAbc(result);
     result = orderWordsByFavorite(result);
     return result;
-  }, [searchText, wordList, wordTypes]);
+  }, [searchText, tagIds, wordList, wordTypes]);
 
-  const isUsedFilter: boolean = !!searchText.trim() || wordTypes.length > 0;
+  const filterTagChoices = useMemo(() => {
+    return convertTagListToChoices(tagList ?? []);
+  }, [tagList]);
+
+  const isUsedFilter: boolean = !!searchText.trim() || wordTypes.length > 0 || tagIds.length > 0;
 
   const dialogs = useDialogs();
 
@@ -129,6 +145,7 @@ const Dictionary = () => {
   const handleClickReset = useCallback(() => {
     setSearchText('');
     setWordTypes([]);
+    setTagIds([]);
   }, []);
 
   return (
@@ -149,7 +166,24 @@ const Dictionary = () => {
             value={searchText}
             onChange={handleChangeSearch}
           />
-          <FilterByTypes value={wordTypes} onChange={setWordTypes} />
+          <SelectField
+            label="Фильтр по типу"
+            choices={wordTypeChoices}
+            value={wordTypes}
+            onChangeValue={setWordTypes}
+            multiple
+            size="small"
+            sx={{ minWidth: '170px', maxWidth: '300px' }}
+          />
+          <SelectField
+            label="Фильтр по тегам"
+            choices={filterTagChoices}
+            value={tagIds}
+            onChangeValue={setTagIds}
+            multiple
+            size="small"
+            sx={{ minWidth: '170px', maxWidth: '300px' }}
+          />
           {isUsedFilter && (
             <Button variant="outlined" onClick={handleClickReset}>
               Сброс

@@ -38,7 +38,7 @@ export const TagForm = ({ tag, onSubmit }: Props) => {
       spacing={2}
       inert={isSubmitting ? '' : undefined}
       marginTop={1}>
-      <FormTextField control={control} name="name" label="Название" />
+      <FormTextField control={control} name="name" label="Название" autoFocus />
       <Stack direction="row" spacing={2}>
         <LoadingButton variant="contained" type="submit" loading={isSubmitting} disabled={!isValid || !isDirty}>
           {tag ? 'Сохранить' : 'Создать'}

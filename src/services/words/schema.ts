@@ -37,7 +37,7 @@ export const WordSchema = BaseWordSchema.superRefine(async (obj, ctx) => {
   const { id, word, types } = obj;
   const words = await findAllByWord(obj.word);
   const isDuplicate = words?.some(
-    (it) => it.id !== id && it.word === word && new Set(it.types).isSubsetOf(new Set(types)),
+    (it) => it.id !== id && it.word === word && !new Set(it.types).isDisjointFrom(new Set(types)),
   );
   if (isDuplicate) {
     ctx.addIssue({

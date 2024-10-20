@@ -16,7 +16,6 @@ export const FormSelectField: FormField<Props & TextFieldProps> = ({ name, contr
         const { value } = field;
         return (
           <TextField
-            label="Тип"
             select
             error={!!error}
             helperText={error?.message}

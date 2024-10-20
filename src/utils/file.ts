@@ -49,6 +49,7 @@ export const importDataFromFile = async (data: unknown): Promise<boolean> => {
     }
     await queryClient.invalidateQueries({ queryKey: [QueryKey.GetTagList] });
     await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordList] });
+    await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordTypeChoices] });
   }
   return isValidFile;
 };

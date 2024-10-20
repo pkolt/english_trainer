@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { Tag, TagWithCount } from './types';
-import { deleteWord, getAllWordIdsByTag, getCountWordByTag } from '../words/api';
+import { deleteWord, getWordsByTag, getCountWordByTag, updateWord } from '../words/api';
 import { QueryKey, StoreName } from '../constants';
 import { queryClient } from '../queryClient';
 
@@ -33,10 +33,14 @@ export const updateTag = async (tag: Tag): Promise<void> => {
 
 export const deleteTag = async (id: string): Promise<void> => {
   //! Need transaction
-  const wordIds = await getAllWordIdsByTag(id);
+  const words = await getWordsByTag(id);
   await db.delete(StoreName.Tags, id);
-  for (const wordId of wordIds) {
-    await deleteWord(wordId, true);
+  for (const word of words) {
+    if (word.tags.length > 1) {
+      await updateWord({ ...word, tags: word.tags.filter((tagId) => tagId !== id) });
+    } else {
+      await deleteWord(word.id, true);
+    }
   }
   await queryClient.invalidateQueries({ queryKey: [QueryKey.GetTagList] });
   await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordList] });

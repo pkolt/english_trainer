@@ -11,6 +11,7 @@ export const createWord = async (data: Word, skipInvalidate?: boolean): Promise<
   await db.add(StoreName.Words, data);
   if (!skipInvalidate) {
     await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordList] });
+    await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordTypeChoices] });
   }
 };
 
@@ -28,6 +29,7 @@ export const deleteWord = async (id: string, skipInvalidate?: boolean): Promise<
   await db.delete(StoreName.Words, id);
   if (!skipInvalidate) {
     await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordList] });
+    await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordTypeChoices] });
   }
 };
 
@@ -40,13 +42,13 @@ export const findByWord = async (text: string): Promise<Word | undefined> => {
 };
 
 export const getCountWordByType = async (wordType: WordType): Promise<number> => {
-  return db.countFromIndex(StoreName.Words, 'by-types', [wordType]);
+  return db.countFromIndex(StoreName.Words, 'by-types', IDBKeyRange.only(wordType));
 };
 
 export const getCountWordByTag = async (tagId: string): Promise<number> => {
-  return db.countFromIndex(StoreName.Words, 'by-tags', [tagId]);
+  return db.countFromIndex(StoreName.Words, 'by-tags', IDBKeyRange.only(tagId));
 };
 
-export const getAllWordIdsByTag = async (tagId: string): Promise<string[]> => {
-  return db.getAllKeysFromIndex(StoreName.Words, 'by-tags', [tagId]);
+export const getWordsByTag = async (tagId: string): Promise<Word[]> => {
+  return db.getAllFromIndex(StoreName.Words, 'by-tags', IDBKeyRange.only(tagId));
 };

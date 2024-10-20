@@ -23,8 +23,8 @@ export const getReadyMyDB = async (): Promise<void> => {
         });
         wordStore.createIndex('by-word', 'word' satisfies keyof Word);
         wordStore.createIndex('by-translate', 'translate' satisfies keyof Word);
-        wordStore.createIndex('by-types', 'types' satisfies keyof Word);
-        wordStore.createIndex('by-tags', 'tags' satisfies keyof Word);
+        wordStore.createIndex('by-types', 'types' satisfies keyof Word, { multiEntry: true });
+        wordStore.createIndex('by-tags', 'tags' satisfies keyof Word, { multiEntry: true });
       }
 
       if (!db.objectStoreNames.contains(StoreName.Tags)) {
