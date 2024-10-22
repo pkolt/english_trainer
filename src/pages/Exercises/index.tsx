@@ -8,6 +8,7 @@ import ForkRightRoundedIcon from '@mui/icons-material/ForkRightRounded';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded';
+import { PageUrl } from '@/constants/urls';
 
 const Exercises = () => {
   return (
@@ -17,7 +18,11 @@ const Exercises = () => {
       </Typography>
       <Grid container spacing={2} maxWidth="50%">
         <Grid size={6}>
-          <ExerciseCard title="Слово-перевод" icon={<ForkLeftRoundedIcon fontSize="inherit" />} />
+          <ExerciseCard
+            title="Слово-перевод"
+            icon={<ForkLeftRoundedIcon fontSize="inherit" />}
+            pageUrl={PageUrl.WordTranslate}
+          />
         </Grid>
         <Grid size={6}>
           <ExerciseCard title="Перевод-слово" icon={<ForkRightRoundedIcon fontSize="inherit" />} disable />
