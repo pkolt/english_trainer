@@ -1,0 +1,10 @@
+.container {
+  cursor: pointer;
+}
+
+.hide {
+  text-decoration: line-through;
+  rotate: 180deg;
+  opacity: 0.2;
+  text-align: right;
+}
