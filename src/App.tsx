@@ -31,7 +31,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <CssBaseline />
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
       <AppProvider branding={BRANDING} navigation={NAVIGATION} router={muiRouter}>
         <ThemeProvider theme={theme}>
           <DialogsProvider>
