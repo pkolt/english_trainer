@@ -4,5 +4,5 @@ export enum PageUrl {
   Exercises = '/exercises',
   Settings = '/settings',
   Tags = '/tags',
-  WordTranslate = '/word-translate',
+  WordToTranslation = '/word-to-translation',
 }

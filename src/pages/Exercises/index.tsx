@@ -21,7 +21,7 @@ const Exercises = () => {
           <ExerciseCard
             title="Слово-перевод"
             icon={<ForkLeftRoundedIcon fontSize="inherit" />}
-            pageUrl={PageUrl.WordTranslate}
+            pageUrl={PageUrl.WordToTranslation}
           />
         </Grid>
         <Grid size={6}>

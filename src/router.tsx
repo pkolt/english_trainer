@@ -8,7 +8,7 @@ const Dictionary = lazy(() => import('./pages/Dictionary'));
 const Exercises = lazy(() => import('./pages/Exercises'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Tags = lazy(() => import('./pages/Tags'));
-const WordTranslate = lazy(() => import('./pages/WordTranslate'));
+const WordToTranslation = lazy(() => import('./pages/WordToTranslation'));
 
 export const router = createBrowserRouter(
   [
@@ -33,8 +33,8 @@ export const router = createBrowserRouter(
       element: <Tags />,
     },
     {
-      path: PageUrl.WordTranslate,
-      element: <WordTranslate />,
+      path: PageUrl.WordToTranslation,
+      element: <WordToTranslation />,
     },
     {
       path: '*',
