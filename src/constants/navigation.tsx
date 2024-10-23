@@ -21,7 +21,7 @@ export const NAVIGATION: Navigation = [
     icon: <LocalOfferRoundedIcon />,
   },
   {
-    segment: getSegment(PageUrl.Exercises),
+    segment: getSegment(PageUrl.Trainers),
     title: 'Тренировки',
     icon: <SurfingIcon />,
   },

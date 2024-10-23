@@ -1,7 +1,7 @@
 export enum PageUrl {
   Home = '/',
   Dictionary = '/dictionary',
-  Exercises = '/exercises',
+  Trainers = '/trainers',
   Settings = '/settings',
   Tags = '/tags',
   WordToTranslation = '/word-to-translation',

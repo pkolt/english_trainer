@@ -5,7 +5,7 @@ import { PageUrl } from './constants/urls';
 
 const Home = lazy(() => import('./pages/Home'));
 const Dictionary = lazy(() => import('./pages/Dictionary'));
-const Exercises = lazy(() => import('./pages/Exercises'));
+const Trainers = lazy(() => import('./pages/Trainers'));
 const Settings = lazy(() => import('./pages/Settings'));
 const Tags = lazy(() => import('./pages/Tags'));
 const WordToTranslation = lazy(() => import('./pages/WordToTranslation'));
@@ -21,8 +21,8 @@ export const router = createBrowserRouter(
       element: <Dictionary />,
     },
     {
-      path: PageUrl.Exercises,
-      element: <Exercises />,
+      path: PageUrl.Trainers,
+      element: <Trainers />,
     },
     {
       path: PageUrl.Settings,

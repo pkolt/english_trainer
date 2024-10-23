@@ -9,7 +9,7 @@ interface Props {
   pageUrl?: PageUrl;
 }
 
-export const ExerciseCard = ({ title, icon, disable, pageUrl }: Props) => {
+export const TrainerCard = ({ title, icon, disable, pageUrl }: Props) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
