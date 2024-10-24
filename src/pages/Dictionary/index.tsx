@@ -3,7 +3,7 @@ import { Typography, Box, IconButton, Button, Input } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
 import { useCallback, useMemo, useState } from 'react';
-import EditIcon from '@mui/icons-material/Edit';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { WORD_TYPE_TO_NAME } from '@/constants/word';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -104,7 +104,7 @@ const Dictionary = () => {
         return [
           <GridActionsCellItem
             key="action-edit"
-            icon={<EditIcon color="primary" />}
+            icon={<EditRoundedIcon color="primary" />}
             label="Изменить"
             onClick={() => {
               dialogs.open(WordFormDialog, id);

@@ -2,12 +2,7 @@ import { useGetWordList } from '@/services/words/hooks';
 import { Word } from '@/services/words/types';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
 import { useCallback, useEffect, useState } from 'react';
-
-interface Step {
-  word: Word;
-  answers: Word[];
-  userAnswer: Word | null;
-}
+import { Step } from './types';
 
 export const useWordToTranslation = () => {
   const { data: wordList, isLoading } = useGetWordList();
@@ -42,7 +37,7 @@ export const useWordToTranslation = () => {
     }
   }, [stepIndex, stepList.length]);
 
-  useEffect(() => {
+  const makeQuestions = useCallback(() => {
     if (!wordList) {
       return;
     }
@@ -66,8 +61,22 @@ export const useWordToTranslation = () => {
       });
     }
 
+    setIsFinished(false);
+    setStepIndex(0);
     setStepList(myStepList);
   }, [wordList]);
 
-  return { isLoading, stepNumber, stepCount, step, applyAnswer, nextStep, isFinished };
+  useEffect(makeQuestions, [makeQuestions]);
+
+  return {
+    isLoading,
+    stepNumber,
+    stepCount,
+    step,
+    applyAnswer,
+    nextStep,
+    isFinished,
+    stepList,
+    restart: makeQuestions,
+  };
 };

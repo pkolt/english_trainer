@@ -5,18 +5,12 @@ import Box from '@mui/material/Box';
 interface Props {
   stepNumber: number;
   stepCount: number;
-  finished?: boolean;
 }
 
-export const StepProgress = ({ stepNumber, stepCount, finished }: Props) => {
+export const StepProgress = ({ stepNumber, stepCount }: Props) => {
   return (
     <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-      <CircularProgress
-        variant="determinate"
-        value={Math.floor((stepNumber / stepCount) * 100)}
-        size={55}
-        color={finished ? 'success' : undefined}
-      />
+      <CircularProgress variant="determinate" value={Math.floor((stepNumber / stepCount) * 100)} size={55} />
       <Box
         sx={{
           top: 0,
