@@ -7,8 +7,17 @@ import { Answers } from './Answers';
 import { Report } from './Report';
 
 const WordToTranslation = () => {
-  const { isLoading, stepNumber, stepCount, step, applyAnswer, nextStep, isFinished, stepList, restart } =
-    useWordToTranslation();
+  const {
+    isLoading,
+    stepNumber,
+    stepCount,
+    question,
+    applyUserAnswer,
+    goToNextQuestion,
+    isFinished,
+    questions,
+    restart,
+  } = useWordToTranslation();
 
   return (
     <DashboardPagesLayout>
@@ -23,24 +32,24 @@ const WordToTranslation = () => {
             <StepProgress stepNumber={stepNumber} stepCount={stepCount} />
           ))}
       </Stack>
-      {step && !isFinished && (
+      {question && !isFinished && (
         <Grid container spacing={4}>
           <Grid size={6} sx={{ display: 'flex' }}>
-            <WordCard data={step.word} />
+            <WordCard data={question.question} />
           </Grid>
           <Grid size={6}>
-            <Answers data={step} onClickAnswer={applyAnswer} />
+            <Answers data={question} onClickAnswer={applyUserAnswer} />
           </Grid>
           <Grid offset={6} size={6}>
-            {step.userAnswer && (
-              <Button variant="outlined" onClick={nextStep} size="large">
+            {question.userAnswer && (
+              <Button variant="outlined" onClick={goToNextQuestion} size="large">
                 Дальше
               </Button>
             )}
           </Grid>
         </Grid>
       )}
-      {isFinished && <Report data={stepList} />}
+      {isFinished && <Report data={questions} />}
     </DashboardPagesLayout>
   );
 };

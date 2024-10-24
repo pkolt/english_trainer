@@ -1,7 +1,7 @@
 import { Word } from '@/services/words/types';
 
-export interface Step {
-  word: Word;
+export interface Question {
+  question: Word;
   answers: Word[];
   userAnswer: Word | null;
 }

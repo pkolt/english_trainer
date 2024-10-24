@@ -1,5 +1,5 @@
 import { IconButton, List, ListItem, ListItemIcon, ListItemText, Stack, Typography, Divider } from '@mui/material';
-import { Step } from '../types';
+import { Question } from '../types';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
@@ -9,14 +9,14 @@ import WordFormDialog from '@/pages/Dictionary/WordFormDialog';
 import { Fragment } from 'react/jsx-runtime';
 
 interface Props {
-  data: Step[];
+  data: Question[];
 }
 
 export const Report = ({ data }: Props) => {
   const dialogs = useDialogs();
   return (
     <List>
-      {data.map(({ word, userAnswer }, index) => {
+      {data.map(({ question: word, userAnswer }, index) => {
         const isSuccess = userAnswer?.id === word.id;
         return (
           <Fragment key={word.id}>

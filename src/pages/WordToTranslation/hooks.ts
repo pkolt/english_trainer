@@ -2,47 +2,47 @@ import { useGetWordList } from '@/services/words/hooks';
 import { Word } from '@/services/words/types';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
 import { useCallback, useEffect, useState } from 'react';
-import { Step } from './types';
+import { Question } from './types';
 
 export const useWordToTranslation = () => {
   const { data: wordList, isLoading } = useGetWordList();
-  const [stepList, setStepList] = useState<Step[]>([]);
-  const [stepIndex, setStepIndex] = useState(0);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [curIndex, setCurIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
-  const stepNumber = stepIndex + 1;
-  const stepCount = stepList.length;
-  const step = stepList[stepIndex];
+  const stepNumber = curIndex + 1;
+  const stepCount = questions.length;
+  const question = questions[curIndex];
 
-  const applyAnswer = useCallback(
+  const applyUserAnswer = useCallback(
     (word: Word) => {
-      if (step.userAnswer) {
+      if (question.userAnswer) {
         return;
       }
 
-      setStepList((state) =>
+      setQuestions((state) =>
         state.map((it) => {
-          return it === step ? { ...it, userAnswer: word } : it;
+          return it === question ? { ...it, userAnswer: word } : it;
         }),
       );
     },
-    [step],
+    [question],
   );
 
-  const nextStep = useCallback(() => {
-    if (stepIndex < stepList.length - 1) {
-      setStepIndex((state) => state + 1);
+  const goToNextQuestion = useCallback(() => {
+    if (curIndex < questions.length - 1) {
+      setCurIndex((state) => state + 1);
     } else {
       setIsFinished(true);
     }
-  }, [stepIndex, stepList.length]);
+  }, [curIndex, questions.length]);
 
   const makeQuestions = useCallback(() => {
     if (!wordList) {
       return;
     }
     let array = [...wordList];
-    const myStepList: Step[] = [];
+    const myStepList: Question[] = [];
 
     for (let i = 0; i < 7; i++) {
       const word = getRandomItemOfArray(array);
@@ -55,15 +55,15 @@ export const useWordToTranslation = () => {
         answers.push(answer);
       }
       myStepList.push({
-        word,
+        question: word,
         answers: shuffle(answers),
         userAnswer: null,
       });
     }
 
     setIsFinished(false);
-    setStepIndex(0);
-    setStepList(myStepList);
+    setCurIndex(0);
+    setQuestions(myStepList);
   }, [wordList]);
 
   useEffect(makeQuestions, [makeQuestions]);
@@ -72,11 +72,11 @@ export const useWordToTranslation = () => {
     isLoading,
     stepNumber,
     stepCount,
-    step,
-    applyAnswer,
-    nextStep,
+    question,
+    applyUserAnswer,
+    goToNextQuestion,
     isFinished,
-    stepList,
+    questions,
     restart: makeQuestions,
   };
 };

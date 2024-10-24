@@ -1,9 +1,9 @@
 import { Button, Stack } from '@mui/material';
-import { Step } from '../types';
+import { Question } from '../types';
 import { Word } from '@/services/words/types';
 
 interface Props {
-  data: Step;
+  data: Question;
   onClickAnswer: (word: Word) => void;
 }
 
@@ -13,7 +13,7 @@ export const Answers = ({ data, onClickAnswer }: Props) => {
       {data.answers.map((it, index) => {
         const isAnswered: boolean = !!data.userAnswer;
         const isSelected: boolean = data.userAnswer?.id === it.id;
-        const isSuccess: boolean = it.id === data.word.id;
+        const isSuccess: boolean = it.id === data.question.id;
         return (
           <Button
             key={it.id}
