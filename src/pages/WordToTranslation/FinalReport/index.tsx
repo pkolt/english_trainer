@@ -12,7 +12,7 @@ interface Props {
   data: Question[];
 }
 
-export const Report = ({ data }: Props) => {
+export const FinalReport = ({ data }: Props) => {
   const dialogs = useDialogs();
   return (
     <List>

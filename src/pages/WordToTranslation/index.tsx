@@ -1,10 +1,9 @@
 import { StepProgress } from '@/components/StepProgress';
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
-import { Button, Grid2 as Grid, Stack, Typography } from '@mui/material';
-import { Question } from './Question';
+import { Button, Stack, Typography } from '@mui/material';
 import { useWordToTranslation } from './hooks';
-import { Answers } from './Answers';
-import { Report } from './Report';
+import { FinalReport } from './FinalReport';
+import { Quiz } from './Quiz';
 
 const WordToTranslation = () => {
   const {
@@ -32,24 +31,10 @@ const WordToTranslation = () => {
             <StepProgress stepNumber={stepNumber} stepCount={stepCount} />
           ))}
       </Stack>
-      {question && !isFinished && (
-        <Grid container spacing={4}>
-          <Grid size={6} sx={{ display: 'flex' }}>
-            <Question data={question.question} />
-          </Grid>
-          <Grid size={6}>
-            <Answers data={question} onClickAnswer={applyUserAnswer} />
-          </Grid>
-          <Grid offset={6} size={6}>
-            {question.userAnswer && (
-              <Button variant="outlined" onClick={goToNextQuestion} size="large">
-                Дальше
-              </Button>
-            )}
-          </Grid>
-        </Grid>
+      {isFinished && <FinalReport data={questions} />}
+      {!isFinished && question && (
+        <Quiz question={question} onClickAnswer={applyUserAnswer} onGoToNextQuestion={goToNextQuestion} />
       )}
-      {isFinished && <Report data={questions} />}
     </DashboardPagesLayout>
   );
 };

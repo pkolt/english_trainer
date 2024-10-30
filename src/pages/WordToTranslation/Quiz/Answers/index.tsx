@@ -1,5 +1,5 @@
 import { Button, Stack } from '@mui/material';
-import { Question } from '../types';
+import { Question } from '../../types';
 import { Word } from '@/services/words/types';
 
 interface Props {
