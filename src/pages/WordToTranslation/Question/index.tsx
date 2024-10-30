@@ -7,7 +7,7 @@ interface Props {
   data: Word;
 }
 
-export const WordCard = ({ data }: Props) => {
+export const Question = ({ data }: Props) => {
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', flex: 1, gap: 2, justifyContent: 'space-between' }}>

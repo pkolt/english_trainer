@@ -1,7 +1,7 @@
 import { StepProgress } from '@/components/StepProgress';
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
 import { Button, Grid2 as Grid, Stack, Typography } from '@mui/material';
-import { WordCard } from './WordCard';
+import { Question } from './Question';
 import { useWordToTranslation } from './hooks';
 import { Answers } from './Answers';
 import { Report } from './Report';
@@ -35,7 +35,7 @@ const WordToTranslation = () => {
       {question && !isFinished && (
         <Grid container spacing={4}>
           <Grid size={6} sx={{ display: 'flex' }}>
-            <WordCard data={question.question} />
+            <Question data={question.question} />
           </Grid>
           <Grid size={6}>
             <Answers data={question} onClickAnswer={applyUserAnswer} />

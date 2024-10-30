@@ -1,3 +1,4 @@
+import { useHotkeys, HotkeyCallback } from 'react-hotkeys-hook';
 import { useGetWordList } from '@/services/words/hooks';
 import { Word } from '@/services/words/types';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
@@ -12,30 +13,42 @@ export const useWordToTranslation = () => {
 
   const stepNumber = curIndex + 1;
   const stepCount = questions.length;
-  const question = questions[curIndex];
+  const question = questions.length > 0 ? questions[curIndex] : null;
+  const isUserAnswered = !!question?.userAnswer;
 
   const applyUserAnswer = useCallback(
     (word: Word) => {
-      if (question.userAnswer) {
-        return;
+      if (!isUserAnswered) {
+        setQuestions((state) =>
+          state.map((it) => {
+            return it === question ? { ...it, userAnswer: word } : it;
+          }),
+        );
       }
-
-      setQuestions((state) =>
-        state.map((it) => {
-          return it === question ? { ...it, userAnswer: word } : it;
-        }),
-      );
     },
-    [question],
+    [question, isUserAnswered],
+  );
+
+  const applyUserAnswerByKeyNumber: HotkeyCallback = useCallback(
+    (event) => {
+      const keyNumber = Number(event.key);
+      const answer = question?.answers[keyNumber - 1];
+      if (answer) {
+        applyUserAnswer(answer);
+      }
+    },
+    [applyUserAnswer, question?.answers],
   );
 
   const goToNextQuestion = useCallback(() => {
-    if (curIndex < questions.length - 1) {
-      setCurIndex((state) => state + 1);
-    } else {
-      setIsFinished(true);
+    if (isUserAnswered) {
+      if (curIndex < questions.length - 1) {
+        setCurIndex((state) => state + 1);
+      } else {
+        setIsFinished(true);
+      }
     }
-  }, [curIndex, questions.length]);
+  }, [curIndex, isUserAnswered, questions.length]);
 
   const makeQuestions = useCallback(() => {
     if (!wordList) {
@@ -67,6 +80,9 @@ export const useWordToTranslation = () => {
   }, [wordList]);
 
   useEffect(makeQuestions, [makeQuestions]);
+
+  useHotkeys('space,enter', isFinished ? makeQuestions : goToNextQuestion);
+  useHotkeys('1,2,3,4,5,6,7,8,9', applyUserAnswerByKeyNumber);
 
   return {
     isLoading,
