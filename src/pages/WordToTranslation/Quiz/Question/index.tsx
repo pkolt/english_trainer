@@ -5,14 +5,15 @@ import { Word } from '@/services/words/types';
 
 interface Props {
   data: Word;
+  autoSpeak: boolean;
 }
 
-export const Question = ({ data }: Props) => {
+export const Question = ({ data, autoSpeak }: Props) => {
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', flex: 1, gap: 2, justifyContent: 'space-between' }}>
         <Stack direction="row" spacing={1} alignItems="center">
-          <SimpleSpeakButton text={data.word} />
+          <SimpleSpeakButton text={data.word} autoSpeak={autoSpeak} />
           <Typography variant="h5">{data.word}</Typography>
           <Typography variant="body1" color="textSecondary">
             [{data.transcription}]

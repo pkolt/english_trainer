@@ -8,22 +8,36 @@ import cn from 'classnames';
 interface Props {
   text: string;
   voiceURI: string;
+  autoSpeak?: boolean;
 }
 
-export const SpeakButton = ({ text, voiceURI }: Props) => {
+export const SpeakButton = ({ text, voiceURI, autoSpeak }: Props) => {
   const [isReady, setIsReady] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const handleClick = useCallback(() => {
     if (isReady && !isSpeaking) {
       setIsSpeaking(true);
-      speakText(text, voiceURI).finally(() => setIsSpeaking(false));
+      speakText(text, voiceURI)
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setIsSpeaking(false);
+        });
     }
   }, [isReady, isSpeaking, text, voiceURI]);
 
   useEffect(() => {
-    getReadySpeak().then(setIsReady);
+    getReadySpeak().then(() => setIsReady(true));
   }, []);
+
+  useEffect(() => {
+    if (isReady && autoSpeak) {
+      handleClick();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoSpeak, isReady]);
 
   return (
     <IconButton

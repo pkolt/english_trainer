@@ -33,11 +33,10 @@ export const speakText = async (text: string, voiceURI: string): Promise<void> =
     console.error(`Not found voice: ${voiceURI}`);
     return;
   }
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const utter = new SpeechSynthesisUtterance(text);
-    const handler = () => resolve();
-    utter.onend = handler;
-    utter.onerror = handler;
+    utter.onend = () => resolve();
+    utter.onerror = reject;
     utter.voice = voice;
     speechSynthesis.speak(utter);
   });

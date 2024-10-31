@@ -10,6 +10,7 @@ export const useWordToTranslation = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [curIndex, setCurIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
+  const [autoSpeak, setAutoSpeak] = useState(false);
 
   const stepNumber = curIndex + 1;
   const stepCount = questions.length;
@@ -94,5 +95,7 @@ export const useWordToTranslation = () => {
     isFinished,
     questions,
     restart: makeQuestions,
+    autoSpeak,
+    setAutoSpeak,
   };
 };

@@ -16,6 +16,8 @@ const WordToTranslation = () => {
     isFinished,
     questions,
     restart,
+    autoSpeak,
+    setAutoSpeak,
   } = useWordToTranslation();
 
   return (
@@ -33,7 +35,13 @@ const WordToTranslation = () => {
       </Stack>
       {isFinished && <FinalReport data={questions} />}
       {!isFinished && question && (
-        <Quiz question={question} onClickAnswer={applyUserAnswer} onGoToNextQuestion={goToNextQuestion} />
+        <Quiz
+          question={question}
+          onClickAnswer={applyUserAnswer}
+          onGoToNextQuestion={goToNextQuestion}
+          autoSpeak={autoSpeak}
+          onChangeAutoSpeak={setAutoSpeak}
+        />
       )}
     </DashboardPagesLayout>
   );
