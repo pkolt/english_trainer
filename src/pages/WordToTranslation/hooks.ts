@@ -81,8 +81,8 @@ export const useWordToTranslation = () => {
 
   useEffect(makeQuestions, [makeQuestions]);
 
-  useHotkeys('space,enter', isFinished ? makeQuestions : goToNextQuestion);
-  useHotkeys('1,2,3,4,5,6,7,8,9', applyUserAnswerByKeyNumber);
+  useHotkeys('space,enter', isFinished ? makeQuestions : goToNextQuestion, { preventDefault: true });
+  useHotkeys('1,2,3,4,5,6,7,8,9', applyUserAnswerByKeyNumber, { preventDefault: true });
 
   return {
     isLoading,

@@ -15,9 +15,11 @@ export const SpeakButton = ({ text, voiceURI }: Props) => {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   const handleClick = useCallback(() => {
-    setIsSpeaking(true);
-    speakText(text, voiceURI).finally(() => setIsSpeaking(false));
-  }, [text, voiceURI]);
+    if (isReady && !isSpeaking) {
+      setIsSpeaking(true);
+      speakText(text, voiceURI).finally(() => setIsSpeaking(false));
+    }
+  }, [isReady, isSpeaking, text, voiceURI]);
 
   useEffect(() => {
     getReadySpeak().then(setIsReady);
