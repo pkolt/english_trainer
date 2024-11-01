@@ -5,6 +5,9 @@ import { getRandomItemOfArray, shuffle } from '@/utils/random';
 import { useCallback, useEffect, useState } from 'react';
 import { Question } from './types';
 
+const QUESTIONS_LENGTH = 7;
+const ANSWERS_LENGTH = 5;
+
 export const useWordToTranslation = () => {
   const { data: wordList, isLoading } = useGetWordList();
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -58,12 +61,12 @@ export const useWordToTranslation = () => {
     let array = [...wordList];
     const myStepList: Question[] = [];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < QUESTIONS_LENGTH; i++) {
       const word = getRandomItemOfArray(array);
       const answers: Word[] = [word];
       array = array.filter((it) => it.id !== word.id);
 
-      for (let j = 0; j < 4; j++) {
+      for (let j = 0; j < ANSWERS_LENGTH - 1; j++) {
         const answer = getRandomItemOfArray(array);
         array = array.filter((it) => it.id !== answer.id);
         answers.push(answer);
