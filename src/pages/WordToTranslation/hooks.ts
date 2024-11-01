@@ -2,8 +2,12 @@ import { useHotkeys, HotkeyCallback } from 'react-hotkeys-hook';
 import { useGetWordList } from '@/services/words/hooks';
 import { Word } from '@/services/words/types';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Question } from './types';
+import { useLocation } from 'react-router-dom';
+import { TrainerRouteState } from '../Trainers/types';
+import { filterWordsByTypes } from '@/components/FilterByWordTypes/utils';
+import { filterWordsByTagIds } from '@/components/FilterByTags/utils';
 
 const QUESTIONS_LENGTH = 7;
 const ANSWERS_LENGTH = 5;
@@ -19,6 +23,16 @@ export const useWordToTranslation = () => {
   const stepCount = questions.length;
   const question = questions.length > 0 ? questions[curIndex] : null;
   const isUserAnswered = !!question?.userAnswer;
+
+  const routeState = (useLocation().state ?? {}) as TrainerRouteState;
+  const filteredWordList = useMemo(() => {
+    if (wordList) {
+      let result = wordList;
+      result = filterWordsByTypes(result, routeState.wordTypes ?? []);
+      result = filterWordsByTagIds(result, routeState.tags ?? []);
+      return result;
+    }
+  }, [routeState.tags, routeState.wordTypes, wordList]);
 
   const applyUserAnswer = useCallback(
     (word: Word) => {
@@ -55,10 +69,10 @@ export const useWordToTranslation = () => {
   }, [curIndex, isUserAnswered, questions.length]);
 
   const makeQuestions = useCallback(() => {
-    if (!wordList) {
+    if (!filteredWordList) {
       return;
     }
-    let array = [...wordList];
+    let array = [...filteredWordList];
     const myStepList: Question[] = [];
 
     for (let i = 0; i < QUESTIONS_LENGTH; i++) {
@@ -81,7 +95,7 @@ export const useWordToTranslation = () => {
     setIsFinished(false);
     setCurIndex(0);
     setQuestions(myStepList);
-  }, [wordList]);
+  }, [filteredWordList]);
 
   useEffect(makeQuestions, [makeQuestions]);
 

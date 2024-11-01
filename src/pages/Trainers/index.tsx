@@ -1,5 +1,5 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
-import { Grid2 as Grid, Typography } from '@mui/material';
+import { Button, Grid2 as Grid, Stack, Typography } from '@mui/material';
 import { TrainerCard } from './TrainerCard';
 import CampaignRoundedIcon from '@mui/icons-material/CampaignRounded';
 import WidgetsRoundedIcon from '@mui/icons-material/WidgetsRounded';
@@ -9,19 +9,44 @@ import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import CreateRoundedIcon from '@mui/icons-material/CreateRounded';
 import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded';
 import { PageUrl } from '@/constants/urls';
+import { useMemo, useState } from 'react';
+import { WordType } from '@/services/words/types';
+import { FilterByTags } from '@/components/FilterByTags';
+import { FilterByWordTypes } from '@/components/FilterByWordTypes';
+import { TrainerRouteState } from './types';
 
 const Trainers = () => {
+  const [tags, setTags] = useState<string[]>([]);
+  const [wordTypes, setWordTypes] = useState<WordType[]>([]);
+  const isFiltered = tags.length > 0 || wordTypes.length > 0;
+  const pageState = useMemo<TrainerRouteState>(() => ({ tags, wordTypes }), [tags, wordTypes]);
+
+  const resetFilter = () => {
+    setTags([]);
+    setWordTypes([]);
+  };
+
   return (
     <DashboardPagesLayout>
-      <Typography variant="h4" marginBottom={2}>
-        Тренировки
-      </Typography>
+      <Stack direction="row" spacing={2} marginBottom={4}>
+        <Typography variant="h4" marginBottom={2}>
+          Тренировки
+        </Typography>
+        <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
+        <FilterByTags value={tags} onChangeValue={setTags} />
+        {isFiltered && (
+          <Button variant="outlined" onClick={resetFilter}>
+            Сброс
+          </Button>
+        )}
+      </Stack>
       <Grid container spacing={2} maxWidth="50%">
         <Grid size={6}>
           <TrainerCard
             title="Слово-перевод"
             icon={<ForkLeftRoundedIcon fontSize="inherit" />}
             pageUrl={PageUrl.WordToTranslation}
+            pageState={pageState}
           />
         </Grid>
         <Grid size={6}>

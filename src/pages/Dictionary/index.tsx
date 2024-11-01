@@ -14,22 +14,15 @@ import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
-import {
-  filterWordsBySearchText,
-  filterWordsByTypes,
-  orderWordsByFavorite,
-  orderWordsByAbc,
-  convertTagListToChoices,
-  filterWordsByTagIds,
-} from './utils';
+import { filterWordsBySearchText, orderWordsByFavorite, orderWordsByAbc } from './utils';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
-import { useDeleteWord, useGetWordList, useGetWordTypeChoices } from '@/services/words/hooks';
-import { SelectField } from '@/components/Form/SelectField';
-import { useGetTagList } from '@/services/tags/hooks';
+import { useDeleteWord, useGetWordList } from '@/services/words/hooks';
+import { FilterByTags } from '@/components/FilterByTags';
+import { FilterByWordTypes } from '@/components/FilterByWordTypes';
+import { filterWordsByTypes } from '@/components/FilterByWordTypes/utils';
+import { filterWordsByTagIds } from '@/components/FilterByTags/utils';
 
 const Dictionary = () => {
-  const { data: wordTypeChoices } = useGetWordTypeChoices();
-  const { data: tagList } = useGetTagList();
   const { data: wordList, isLoading } = useGetWordList();
   const { mutate: deleteWord } = useDeleteWord();
   const [searchText, setSearchText] = useState('');
@@ -48,10 +41,6 @@ const Dictionary = () => {
     result = orderWordsByFavorite(result);
     return result;
   }, [searchText, tagIds, wordList, wordTypes]);
-
-  const filterTagChoices = useMemo(() => {
-    return convertTagListToChoices(tagList ?? []);
-  }, [tagList]);
 
   const isUsedFilter: boolean = !!searchText.trim() || wordTypes.length > 0 || tagIds.length > 0;
 
@@ -166,24 +155,8 @@ const Dictionary = () => {
             value={searchText}
             onChange={handleChangeSearch}
           />
-          <SelectField
-            label="Фильтр по типу"
-            choices={wordTypeChoices}
-            value={wordTypes}
-            onChangeValue={setWordTypes}
-            multiple
-            size="small"
-            sx={{ minWidth: '170px', maxWidth: '300px' }}
-          />
-          <SelectField
-            label="Фильтр по тегам"
-            choices={filterTagChoices}
-            value={tagIds}
-            onChangeValue={setTagIds}
-            multiple
-            size="small"
-            sx={{ minWidth: '170px', maxWidth: '300px' }}
-          />
+          <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
+          <FilterByTags value={tagIds} onChangeValue={setTagIds} />
           {isUsedFilter && (
             <Button variant="outlined" onClick={handleClickReset}>
               Сброс
