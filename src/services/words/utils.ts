@@ -73,7 +73,7 @@ export const makeQuestions = (words: Word[]): Question[] => {
     questionIds.push(word.id);
 
     const answers: Word[] = [word];
-    const answerIds: string[] = [];
+    const answerIds: string[] = [word.id];
     for (let j = 0; j < ANSWERS_MAX - 1; j++) {
       const wordsForAnswers = words.filter((it) => !answerIds.includes(it.id));
       if (wordsForAnswers.length === 0) {
