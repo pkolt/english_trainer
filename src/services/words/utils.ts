@@ -62,17 +62,26 @@ const ANSWERS_MAX = 5;
 
 export const makeQuestions = (words: Word[]): Question[] => {
   const questions: Question[] = [];
-  let array = [...words];
+  const questionIds: string[] = [];
 
   for (let i = 0; i < QUESTIONS_MAX; i++) {
-    const word = getRandomItemOfArray(array);
-    const answers: Word[] = [word];
-    array = array.filter((it) => it.id !== word.id);
+    const wordsForQuestions = words.filter((it) => !questionIds.includes(it.id));
+    if (wordsForQuestions.length === 0) {
+      break;
+    }
+    const word = getRandomItemOfArray(wordsForQuestions);
+    questionIds.push(word.id);
 
+    const answers: Word[] = [word];
+    const answerIds: string[] = [];
     for (let j = 0; j < ANSWERS_MAX - 1; j++) {
-      const answer = getRandomItemOfArray(array);
-      array = array.filter((it) => it.id !== answer.id);
+      const wordsForAnswers = words.filter((it) => !answerIds.includes(it.id));
+      if (wordsForAnswers.length === 0) {
+        break;
+      }
+      const answer = getRandomItemOfArray(wordsForAnswers);
       answers.push(answer);
+      answerIds.push(answer.id);
     }
 
     questions.push({
@@ -81,6 +90,5 @@ export const makeQuestions = (words: Word[]): Question[] => {
       userAnswer: null,
     });
   }
-
   return questions;
 };
