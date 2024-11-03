@@ -1,15 +1,10 @@
 import { useHotkeys, HotkeyCallback } from 'react-hotkeys-hook';
 import { useGetWordList } from '@/services/words/hooks';
-import { Word } from '@/services/words/types';
-import { filterWordsByTagIds, filterWordsByTypes } from '@/services/words/utils';
-import { getRandomItemOfArray, shuffle } from '@/utils/random';
+import { Word, Question } from '@/services/words/types';
+import { filterWordsByTagIds, filterWordsByTypes, makeQuestions } from '@/services/words/utils';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Question } from './types';
 import { useLocation } from 'react-router-dom';
 import { TrainerRouteState } from '../Trainers/types';
-
-const QUESTIONS_LENGTH = 7;
-const ANSWERS_LENGTH = 5;
 
 export const useWordToTranslation = () => {
   const { data: wordList, isLoading } = useGetWordList();
@@ -67,38 +62,19 @@ export const useWordToTranslation = () => {
     }
   }, [curIndex, isUserAnswered, questions.length]);
 
-  const makeQuestions = useCallback(() => {
+  const startQuiz = useCallback(() => {
     if (!filteredWordList) {
       return;
-    }
-    let array = [...filteredWordList];
-    const myStepList: Question[] = [];
-
-    for (let i = 0; i < QUESTIONS_LENGTH; i++) {
-      const word = getRandomItemOfArray(array);
-      const answers: Word[] = [word];
-      array = array.filter((it) => it.id !== word.id);
-
-      for (let j = 0; j < ANSWERS_LENGTH - 1; j++) {
-        const answer = getRandomItemOfArray(array);
-        array = array.filter((it) => it.id !== answer.id);
-        answers.push(answer);
-      }
-      myStepList.push({
-        question: word,
-        answers: shuffle(answers),
-        userAnswer: null,
-      });
     }
 
     setIsFinished(false);
     setCurIndex(0);
-    setQuestions(myStepList);
+    setQuestions(makeQuestions(filteredWordList));
   }, [filteredWordList]);
 
-  useEffect(makeQuestions, [makeQuestions]);
+  useEffect(startQuiz, [startQuiz]);
 
-  useHotkeys('space,enter', isFinished ? makeQuestions : goToNextQuestion, { preventDefault: true });
+  useHotkeys('space,enter', isFinished ? startQuiz : goToNextQuestion, { preventDefault: true });
   useHotkeys('1,2,3,4,5,6,7,8,9', applyUserAnswerByKeyNumber, { preventDefault: true });
 
   return {
@@ -110,7 +86,7 @@ export const useWordToTranslation = () => {
     goToNextQuestion,
     isFinished,
     questions,
-    restart: makeQuestions,
+    startQuiz,
     autoSpeak,
     setAutoSpeak,
   };

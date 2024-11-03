@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
-import { Word, WordType } from './types';
+import { Question, Word, WordType } from './types';
+import { getRandomItemOfArray, shuffle } from '@/utils/random';
 
 export const getWordDefaultValues = (): Word => {
   const today = DateTime.utc().toISO();
@@ -54,4 +55,32 @@ export const orderWordsByAbc = (list: Word[]): Word[] => {
 
 export const orderWordsByFavorite = (list: Word[]): Word[] => {
   return list.toSorted((a, b) => Number(b.favorite) - Number(a.favorite));
+};
+
+const QUESTIONS_MAX = 7;
+const ANSWERS_MAX = 5;
+
+export const makeQuestions = (words: Word[]): Question[] => {
+  const questions: Question[] = [];
+  let array = [...words];
+
+  for (let i = 0; i < QUESTIONS_MAX; i++) {
+    const word = getRandomItemOfArray(array);
+    const answers: Word[] = [word];
+    array = array.filter((it) => it.id !== word.id);
+
+    for (let j = 0; j < ANSWERS_MAX - 1; j++) {
+      const answer = getRandomItemOfArray(array);
+      array = array.filter((it) => it.id !== answer.id);
+      answers.push(answer);
+    }
+
+    questions.push({
+      question: word,
+      answers: shuffle(answers),
+      userAnswer: null,
+    });
+  }
+
+  return questions;
 };

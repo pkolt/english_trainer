@@ -1,5 +1,4 @@
 import { IconButton, List, ListItem, ListItemIcon, ListItemText, Stack, Typography, Divider } from '@mui/material';
-import { Question } from '../types';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
@@ -7,6 +6,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { useDialogs } from '@toolpad/core';
 import WordFormDialog from '@/pages/Dictionary/WordFormDialog';
 import { Fragment } from 'react/jsx-runtime';
+import { Question } from '@/services/words/types';
 
 interface Props {
   data: Question[];

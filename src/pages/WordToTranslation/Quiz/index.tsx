@@ -1,8 +1,7 @@
-import { Question as QuestionType } from '../types';
 import { Button, FormControlLabel, Grid2 as Grid, Switch, Typography } from '@mui/material';
 import { Question } from './Question';
 import { Answers } from './Answers';
-import { Word } from '@/services/words/types';
+import { Word, Question as QuestionType } from '@/services/words/types';
 
 interface Props {
   question: QuestionType;

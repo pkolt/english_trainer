@@ -25,3 +25,9 @@ export enum WordType {
 }
 
 export type Word = z.infer<typeof WordSchema>;
+
+export interface Question {
+  question: Word;
+  answers: Word[];
+  userAnswer: Word | null;
+}

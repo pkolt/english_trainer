@@ -15,7 +15,7 @@ const WordToTranslation = () => {
     goToNextQuestion,
     isFinished,
     questions,
-    restart,
+    startQuiz: restart,
     autoSpeak,
     setAutoSpeak,
   } = useWordToTranslation();
