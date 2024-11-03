@@ -14,13 +14,17 @@ import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
-import { filterWordsBySearchText, orderWordsByFavorite, orderWordsByAbc } from './utils';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
 import { useDeleteWord, useGetWordList } from '@/services/words/hooks';
 import { FilterByTags } from '@/components/FilterByTags';
 import { FilterByWordTypes } from '@/components/FilterByWordTypes';
-import { filterWordsByTypes } from '@/components/FilterByWordTypes/utils';
-import { filterWordsByTagIds } from '@/components/FilterByTags/utils';
+import {
+  filterWordsBySearchText,
+  filterWordsByTagIds,
+  filterWordsByTypes,
+  orderWordsByAbc,
+  orderWordsByFavorite,
+} from '@/services/words/utils';
 
 const Dictionary = () => {
   const { data: wordList, isLoading } = useGetWordList();

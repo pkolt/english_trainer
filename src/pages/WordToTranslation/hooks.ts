@@ -1,13 +1,12 @@
 import { useHotkeys, HotkeyCallback } from 'react-hotkeys-hook';
 import { useGetWordList } from '@/services/words/hooks';
 import { Word } from '@/services/words/types';
+import { filterWordsByTagIds, filterWordsByTypes } from '@/services/words/utils';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Question } from './types';
 import { useLocation } from 'react-router-dom';
 import { TrainerRouteState } from '../Trainers/types';
-import { filterWordsByTypes } from '@/components/FilterByWordTypes/utils';
-import { filterWordsByTagIds } from '@/components/FilterByTags/utils';
 
 const QUESTIONS_LENGTH = 7;
 const ANSWERS_LENGTH = 5;
