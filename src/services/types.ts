@@ -2,6 +2,7 @@ import { DBSchema, IDBPDatabase } from 'idb';
 import { Word, WordType } from './words/types';
 import { StoreName } from './constants';
 import { Tag } from './tags/types';
+import { WordProgress } from './wordProgress/types';
 
 export interface MyDBSchema extends DBSchema {
   [StoreName.Words]: {
@@ -19,6 +20,13 @@ export interface MyDBSchema extends DBSchema {
     value: Tag;
     indexes: {
       'by-name': string;
+    };
+  };
+  [StoreName.WordProgress]: {
+    key: string;
+    value: WordProgress;
+    indexes: {
+      'by-word': string;
     };
   };
 }

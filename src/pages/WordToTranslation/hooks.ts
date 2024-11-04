@@ -5,6 +5,7 @@ import { filterWordsByTagIds, filterWordsByTypes, makeQuestions } from '@/servic
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TrainerRouteState } from '../Trainers/types';
+import { saveWordProgressList } from '@/services/wordProgress/utils';
 
 export const useWordToTranslation = () => {
   const { data: wordList, isLoading } = useGetWordList();
@@ -58,9 +59,10 @@ export const useWordToTranslation = () => {
         setCurIndex((state) => state + 1);
       } else {
         setIsFinished(true);
+        saveWordProgressList(questions);
       }
     }
-  }, [curIndex, isUserAnswered, questions.length]);
+  }, [curIndex, isUserAnswered, questions]);
 
   const startQuiz = useCallback(() => {
     if (!filteredWordList) {

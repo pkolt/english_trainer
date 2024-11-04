@@ -3,6 +3,7 @@ import { MyDBSchema, MyDB } from './types';
 import { StoreName } from './constants';
 import { Word } from './words/types';
 import { Tag } from './tags/types';
+import { WordProgress } from './wordProgress/types';
 
 const DB_NAME = 'english-trainer';
 const DB_VERSION = 1;
@@ -33,6 +34,14 @@ export const getReadyMyDB = async (): Promise<void> => {
           autoIncrement: false,
         });
         tagStore.createIndex('by-name', 'name' satisfies keyof Tag, { unique: true });
+      }
+
+      if (!db.objectStoreNames.contains(StoreName.WordProgress)) {
+        const wordProgressStore = db.createObjectStore(StoreName.WordProgress, {
+          keyPath: 'id',
+          autoIncrement: false,
+        });
+        wordProgressStore.createIndex('by-word', 'word' satisfies keyof WordProgress, { unique: true });
       }
     },
     // upgrade(db, oldVersion, newVersion, transaction, event) {}

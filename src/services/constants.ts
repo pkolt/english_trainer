@@ -1,6 +1,7 @@
 export enum StoreName {
   Words = 'words',
   Tags = 'tags',
+  WordProgress = 'word_progress',
 }
 
 export enum QueryKey {
