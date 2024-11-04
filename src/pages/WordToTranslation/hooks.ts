@@ -2,17 +2,26 @@ import { useHotkeys, HotkeyCallback } from 'react-hotkeys-hook';
 import { useGetWordList } from '@/services/words/hooks';
 import { Word, Question } from '@/services/words/types';
 import { filterWordsByTagIds, filterWordsByTypes, makeQuestions } from '@/services/words/utils';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TrainerRouteState } from '../Trainers/types';
-import { saveWordProgressList } from '@/services/wordProgress/utils';
+import {
+  saveWordProgressList,
+  sortWordListByProgress,
+  filterWordListByTodayProgress,
+} from '@/services/wordProgress/utils';
+import { useGetWordProgressList } from '@/services/wordProgress/hooks';
 
 export const useWordToTranslation = () => {
-  const { data: wordList, isLoading } = useGetWordList();
+  const { data: wordList, isLoading: isLoadingWordList } = useGetWordList();
+  const { data: wordProgressList, isLoading: isLoadingWordProgressList } = useGetWordProgressList();
+  const isLoading = isLoadingWordList || isLoadingWordProgressList;
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [curIndex, setCurIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(false);
+  const refOnlyOnce = useRef(false);
 
   const stepNumber = curIndex + 1;
   const stepCount = questions.length;
@@ -21,13 +30,15 @@ export const useWordToTranslation = () => {
 
   const routeState = (useLocation().state ?? {}) as TrainerRouteState;
   const filteredWordList = useMemo(() => {
-    if (wordList) {
+    if (wordList && wordProgressList) {
       let result = wordList;
       result = filterWordsByTypes(result, routeState.wordTypes ?? []);
       result = filterWordsByTagIds(result, routeState.tags ?? []);
+      result = filterWordListByTodayProgress(result, wordProgressList);
+      result = sortWordListByProgress(result, wordProgressList);
       return result;
     }
-  }, [routeState.tags, routeState.wordTypes, wordList]);
+  }, [routeState.tags, routeState.wordTypes, wordList, wordProgressList]);
 
   const applyUserAnswer = useCallback(
     (word: Word) => {
@@ -68,13 +79,17 @@ export const useWordToTranslation = () => {
     if (!filteredWordList) {
       return;
     }
-
     setIsFinished(false);
     setCurIndex(0);
     setQuestions(makeQuestions(filteredWordList));
   }, [filteredWordList]);
 
-  useEffect(startQuiz, [startQuiz]);
+  useEffect(() => {
+    if (filteredWordList && !refOnlyOnce.current) {
+      refOnlyOnce.current = true;
+      startQuiz();
+    }
+  }, [filteredWordList, startQuiz]);
 
   useHotkeys('space,enter', isFinished ? startQuiz : goToNextQuestion, { preventDefault: true });
   useHotkeys('1,2,3,4,5,6,7,8,9', applyUserAnswerByKeyNumber, { preventDefault: true });

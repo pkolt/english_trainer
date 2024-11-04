@@ -62,16 +62,7 @@ const ANSWERS_MAX = 5;
 
 export const makeQuestions = (words: Word[]): Question[] => {
   const questions: Question[] = [];
-  const questionIds: string[] = [];
-
-  for (let i = 0; i < QUESTIONS_MAX; i++) {
-    const wordsForQuestions = words.filter((it) => !questionIds.includes(it.id));
-    if (wordsForQuestions.length === 0) {
-      break;
-    }
-    const word = getRandomItemOfArray(wordsForQuestions);
-    questionIds.push(word.id);
-
+  for (const word of words.slice(0, QUESTIONS_MAX)) {
     const answers: Word[] = [word];
     const answerIds: string[] = [word.id];
     for (let j = 0; j < ANSWERS_MAX - 1; j++) {

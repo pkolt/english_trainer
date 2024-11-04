@@ -1,9 +1,10 @@
-import { StoreName } from '../constants';
+import { QueryKey, StoreName } from '../constants';
 import { db } from '../db';
+import { queryClient } from '../queryClient';
 import { WordProgress } from './types';
 
-export const createWordProgress = async (wordProgress: WordProgress): Promise<void> => {
-  await db.add(StoreName.WordProgress, wordProgress);
+export const getWordProgressList = async (): Promise<WordProgress[]> => {
+  return db.getAll(StoreName.WordProgress);
 };
 
 export const readWordProgress = async (id: string): Promise<WordProgress | undefined> => {
@@ -12,6 +13,7 @@ export const readWordProgress = async (id: string): Promise<WordProgress | undef
 
 export const updateWordProgress = async (rating: WordProgress): Promise<void> => {
   await db.put(StoreName.WordProgress, rating);
+  await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordProgressList] });
 };
 
 export const findWordProgressByWord = async (wordId: string): Promise<WordProgress | undefined> => {

@@ -10,4 +10,5 @@ export enum QueryKey {
   GetWordTypeChoices = 'get_word_type_choices',
   GetTagList = 'get_tag_list',
   GetTag = 'get_tag',
+  GetWordProgressList = 'get_word_progress_list',
 }
