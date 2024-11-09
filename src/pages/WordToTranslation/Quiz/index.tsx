@@ -13,7 +13,7 @@ interface Props {
 
 export const Quiz = ({ question, onClickAnswer, onGoToNextQuestion, autoSpeak, onChangeAutoSpeak }: Props) => {
   return (
-    <Grid container spacing={4}>
+    <Grid container rowSpacing={4} columnSpacing={8}>
       <Grid size={12} textAlign="right">
         <FormControlLabel
           control={

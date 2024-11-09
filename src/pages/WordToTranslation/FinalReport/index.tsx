@@ -7,6 +7,7 @@ import { useDialogs } from '@toolpad/core';
 import WordFormDialog from '@/pages/Dictionary/WordFormDialog';
 import { Fragment } from 'react/jsx-runtime';
 import { Question } from '@/services/words/types';
+import { renderWordTypes } from '@/services/words/utils';
 
 interface Props {
   data: Question[];
@@ -37,13 +38,19 @@ export const FinalReport = ({ data }: Props) => {
                             [{word.transcription}]
                           </Typography>
                         )}
+
                         <IconButton onClick={() => dialogs.open(WordFormDialog, word.id)}>
                           <EditRoundedIcon color="primary" fontSize="small" />
                         </IconButton>
                       </Stack>
-                      <Typography variant="body1" color="textSecondary">
-                        {word.translate}
-                      </Typography>
+                      <Stack direction="row" spacing={1} alignItems="center">
+                        <Typography variant="body1" color="textSecondary">
+                          {word.translate}
+                        </Typography>
+                        <Typography variant="caption" color="success">
+                          ({renderWordTypes(word.types)})
+                        </Typography>
+                      </Stack>
                     </Stack>
                   </Stack>
                 }

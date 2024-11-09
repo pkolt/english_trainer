@@ -5,7 +5,6 @@ import { Word, WordType } from '@/services/words/types';
 import { useCallback, useMemo, useState } from 'react';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { WORD_TYPE_TO_NAME } from '@/constants/word';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useDialogs } from '@toolpad/core/useDialogs';
 import WordFormDialog from './WordFormDialog';
@@ -24,6 +23,7 @@ import {
   filterWordsByTypes,
   orderWordsByAbc,
   orderWordsByFavorite,
+  renderWordTypes,
 } from '@/services/words/utils';
 
 const Dictionary = () => {
@@ -85,9 +85,7 @@ const Dictionary = () => {
       field: 'types',
       headerName: 'Тип',
       width: 150,
-      valueGetter(value: WordType[]) {
-        return value.map((it) => WORD_TYPE_TO_NAME[it]).join(', ');
-      },
+      valueGetter: renderWordTypes,
     },
     {
       field: 'actions',

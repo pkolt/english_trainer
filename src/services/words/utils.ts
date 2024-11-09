@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { Question, Word, WordType } from './types';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
+import { WORD_TYPE_TO_NAME } from '@/constants/word';
 
 export const getWordDefaultValues = (): Word => {
   const today = DateTime.utc().toISO();
@@ -55,6 +56,10 @@ export const orderWordsByAbc = (list: Word[]): Word[] => {
 
 export const orderWordsByFavorite = (list: Word[]): Word[] => {
   return list.toSorted((a, b) => Number(b.favorite) - Number(a.favorite));
+};
+
+export const renderWordTypes = (values: WordType[]) => {
+  return values.map((it) => WORD_TYPE_TO_NAME[it]).join(', ');
 };
 
 const QUESTIONS_MAX = 7;
