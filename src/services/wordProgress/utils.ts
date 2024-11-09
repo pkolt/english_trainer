@@ -48,3 +48,18 @@ export const sortWordListByProgress = (wordList: Word[], wordProgressList: WordP
     return (scores.get(a.id) ?? 0) - (scores.get(b.id) ?? 0);
   });
 };
+
+export const getCountWordToTranslateForToday = (wordProgressList: WordProgress[]): number => {
+  if (wordProgressList.length === 0) {
+    return 0;
+  }
+
+  const today = DateTime.utc();
+  const start = today.startOf('day');
+  const end = today.endOf('day');
+  const interval = Interval.fromDateTimes(start, end);
+  return wordProgressList.reduce((accum, it) => {
+    const date = DateTime.fromMillis(it.wordToTransUpdatedAt, { zone: 'utc' });
+    return interval.contains(date) ? accum + 1 : accum;
+  }, 0);
+};

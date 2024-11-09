@@ -1,17 +1,20 @@
 import { PageUrl } from '@/constants/urls';
-import { Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material';
+import { Badge, Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { TrainerRouteState } from '../types';
 
 interface Props {
   title: string;
-  icon?: JSX.Element;
+  icon: JSX.Element;
   disable?: boolean;
   pageUrl?: PageUrl;
   pageState?: TrainerRouteState;
+  badgeCount?: number;
 }
 
-export const TrainerCard = ({ title, icon, disable, pageUrl, pageState }: Props) => {
+const styles = { height: '100%' };
+
+export const TrainerCard = ({ title, icon, disable, pageUrl, pageState, badgeCount }: Props) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -21,20 +24,28 @@ export const TrainerCard = ({ title, icon, disable, pageUrl, pageState }: Props)
   };
 
   const content = (
-    <CardContent>
+    <CardContent sx={styles}>
       <Stack textAlign="center">
-        {icon && <Typography variant="h2">{icon}</Typography>}
+        <Typography variant="h2">
+          <Badge badgeContent={badgeCount ? `+${badgeCount}` : 0} color="success" max={10000}>
+            {icon}
+          </Badge>
+        </Typography>
         <Typography variant="h6">{title}</Typography>
       </Stack>
     </CardContent>
   );
 
   return (
-    <Card>
+    <Card sx={styles}>
       {disable ? (
-        <Typography color="textDisabled">{content}</Typography>
+        <Typography color="textDisabled" component="div">
+          {content}
+        </Typography>
       ) : (
-        <CardActionArea onClick={handleClick}>{content}</CardActionArea>
+        <CardActionArea onClick={handleClick} sx={styles}>
+          {content}
+        </CardActionArea>
       )}
     </Card>
   );

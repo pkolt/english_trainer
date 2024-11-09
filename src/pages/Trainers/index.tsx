@@ -14,12 +14,19 @@ import { WordType } from '@/services/words/types';
 import { FilterByTags } from '@/components/FilterByTags';
 import { FilterByWordTypes } from '@/components/FilterByWordTypes';
 import { TrainerRouteState } from './types';
+import { useGetWordProgressList } from '@/services/wordProgress/hooks';
+import { getCountWordToTranslateForToday } from '@/services/wordProgress/utils';
 
 const Trainers = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [wordTypes, setWordTypes] = useState<WordType[]>([]);
   const isFiltered = tags.length > 0 || wordTypes.length > 0;
   const pageState = useMemo<TrainerRouteState>(() => ({ tags, wordTypes }), [tags, wordTypes]);
+  const { data: wordProgressList } = useGetWordProgressList();
+  const countWordToTranslate = useMemo(
+    () => getCountWordToTranslateForToday(wordProgressList ?? []),
+    [wordProgressList],
+  );
 
   const resetFilter = () => {
     setTags([]);
@@ -47,6 +54,7 @@ const Trainers = () => {
             icon={<ForkLeftRoundedIcon fontSize="inherit" />}
             pageUrl={PageUrl.WordToTranslation}
             pageState={pageState}
+            badgeCount={countWordToTranslate}
           />
         </Grid>
         <Grid size={6}>
