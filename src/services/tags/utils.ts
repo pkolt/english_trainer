@@ -10,3 +10,12 @@ export const getTagDefaultValues = (): Tag => {
     name: '',
   };
 };
+
+export const renderTags = (tagIds: string[], tagList: Tag[]) => {
+  return tagIds
+    .map((tagId) => {
+      const tag = tagList.find((it) => it.id === tagId);
+      return tag?.name ?? 'Unknown';
+    })
+    .join(', ');
+};

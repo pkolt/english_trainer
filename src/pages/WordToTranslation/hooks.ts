@@ -1,7 +1,7 @@
 import { useHotkeys, HotkeyCallback } from 'react-hotkeys-hook';
 import { useGetWordList } from '@/services/words/hooks';
 import { Word, Question } from '@/services/words/types';
-import { filterWordsByTagIds, filterWordsByTypes, makeQuestions } from '@/services/words/utils';
+import { filterWordsByTagIds, filterWordsByTypes, makeQuestions, renderWordTypes } from '@/services/words/utils';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TrainerRouteState } from '../Trainers/types';
@@ -11,11 +11,14 @@ import {
   filterWordListByTodayProgress,
 } from '@/services/wordProgress/utils';
 import { useGetWordProgressList } from '@/services/wordProgress/hooks';
+import { useGetTagList } from '@/services/tags/hooks';
+import { renderTags } from '@/services/tags/utils';
 
 export const useWordToTranslation = () => {
+  const { data: tagList, isLoading: isLoadingTags } = useGetTagList();
   const { data: wordList, isLoading: isLoadingWordList } = useGetWordList();
   const { data: wordProgressList, isLoading: isLoadingWordProgressList } = useGetWordProgressList();
-  const isLoading = isLoadingWordList || isLoadingWordProgressList;
+  const isLoading = isLoadingWordList || isLoadingWordProgressList || isLoadingTags;
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [curIndex, setCurIndex] = useState(0);
@@ -29,6 +32,18 @@ export const useWordToTranslation = () => {
   const isUserAnswered = !!question?.userAnswer;
 
   const routeState = (useLocation().state ?? {}) as TrainerRouteState;
+
+  const filterText = useMemo(() => {
+    const names: string[] = [];
+    if (routeState.wordTypes && routeState.wordTypes.length > 0) {
+      names.push(renderWordTypes(routeState.wordTypes));
+    }
+    if (tagList && routeState.tags && routeState.tags.length > 0) {
+      names.push(renderTags(routeState.tags, tagList));
+    }
+    return names.filter(Boolean).join(', ');
+  }, [routeState.tags, routeState.wordTypes, tagList]);
+
   const filteredWordList = useMemo(() => {
     if (wordList && wordProgressList) {
       let result = wordList;
@@ -106,5 +121,6 @@ export const useWordToTranslation = () => {
     startQuiz,
     autoSpeak,
     setAutoSpeak,
+    filterText,
   };
 };
