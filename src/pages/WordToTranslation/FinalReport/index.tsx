@@ -4,7 +4,7 @@ import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import { useDialogs } from '@toolpad/core';
-import WordFormDialog from '@/pages/Dictionary/WordFormDialog';
+import WordFormDialog from '@/components/WordFormDialog';
 import { Fragment } from 'react/jsx-runtime';
 import { Question } from '@/services/words/types';
 import { renderWordTypes } from '@/services/words/utils';

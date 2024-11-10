@@ -1,10 +1,10 @@
 import { Word } from '@/services/words/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { fixOnlyEnglish, fixOnlyRussian } from '../../../utils/keyboard';
+import { fixOnlyEnglish, fixOnlyRussian } from '@/utils/keyboard';
 import { WordSchema } from '@/services/words/schema';
 import { Button, Stack } from '@mui/material';
-import { WORD_TYPE_CHOICES } from '../../../constants/form';
+import { WORD_TYPE_CHOICES } from '@/constants/form';
 import { LoadingButton } from '@mui/lab';
 import { useMemo } from 'react';
 import { FormTextField } from '@/components/Form/FormTextField';
