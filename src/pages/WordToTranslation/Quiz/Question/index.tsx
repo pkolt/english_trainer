@@ -15,26 +15,25 @@ export const Question = ({ data, autoSpeak }: Props) => {
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', flex: 1, gap: 2, justifyContent: 'space-between' }}>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <SimpleSpeakButton text={data.word} autoSpeak={autoSpeak} />
+        <Box>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <SimpleSpeakButton text={data.word} autoSpeak={autoSpeak} />
+            <Typography variant="h4">{data.word}</Typography>
+            {data.transcription && (
+              <Typography variant="body1" color="textSecondary">
+                [{data.transcription}]
+              </Typography>
+            )}
+          </Stack>
 
-          <Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography variant="h5">{data.word}</Typography>
-              {data.transcription && (
-                <Typography variant="body1" color="textSecondary">
-                  [{data.transcription}]
-                </Typography>
-              )}
-            </Stack>
-
+          <Box paddingLeft={6}>
             {wordTypesAsStr && (
               <Typography variant="caption" color="success">
                 ({wordTypesAsStr})
               </Typography>
             )}
-          </Stack>
-        </Stack>
+          </Box>
+        </Box>
 
         {data.example && (
           <>
