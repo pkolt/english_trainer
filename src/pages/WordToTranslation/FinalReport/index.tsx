@@ -19,6 +19,7 @@ export const FinalReport = ({ data }: Props) => {
     <List>
       {data.map(({ question: word, userAnswer }, index) => {
         const isSuccess = userAnswer?.id === word.id;
+        const wordTypesAsStr = renderWordTypes(word.types);
         return (
           <Fragment key={word.id}>
             <ListItem>
@@ -47,9 +48,11 @@ export const FinalReport = ({ data }: Props) => {
                         <Typography variant="body1" color="textSecondary">
                           {word.translate}
                         </Typography>
-                        <Typography variant="caption" color="success">
-                          ({renderWordTypes(word.types)})
-                        </Typography>
+                        {wordTypesAsStr && (
+                          <Typography variant="caption" color="success">
+                            ({wordTypesAsStr})
+                          </Typography>
+                        )}
                       </Stack>
                     </Stack>
                   </Stack>
