@@ -5,7 +5,7 @@ import { WordSchema } from '@/services/words/schema';
 import { Button, Stack } from '@mui/material';
 import { WORD_TYPE_CHOICES } from '@/constants/form';
 import { LoadingButton } from '@mui/lab';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { FormTextField } from '@/components/Form/FormTextField';
 import { FormCheckboxField } from '@/components//Form/FormCheckboxField';
 import { FormSelectField } from '@/components//Form/FormSelectField';
@@ -13,6 +13,8 @@ import { mergeValues } from '@/utils/form';
 import { getWordDefaultValues } from '@/services/words/utils';
 import { useGetTagList } from '@/services/tags/hooks';
 import { Choice } from '@/types';
+import { TranscriptionKeyboard } from '../TranscriptionKeyboard';
+import { useInputCursorPosition } from '@/hooks/useInputCursorPosition';
 
 interface Props {
   word?: Word;
@@ -21,6 +23,7 @@ interface Props {
 
 export const WordForm = ({ word, onSubmit }: Props) => {
   const { data: tagList } = useGetTagList();
+  const inputCursorPosition = useInputCursorPosition();
 
   const tagChoices = useMemo<Choice[]>(() => {
     return (tagList ?? []).map((it) => ({ label: it.name, value: it.id }));
@@ -37,6 +40,7 @@ export const WordForm = ({ word, onSubmit }: Props) => {
     watch,
     reset,
     control,
+    setValue,
   } = useForm<Word>({
     mode: 'onChange',
     resolver: zodResolver(WordSchema),
@@ -44,6 +48,19 @@ export const WordForm = ({ word, onSubmit }: Props) => {
   });
 
   const example = watch('example');
+  const transcription = watch('transcription');
+
+  const handleClickTransKey = useCallback(
+    (value: string) => {
+      const nextValue = transcription.split('').toSpliced(inputCursorPosition.position, 0, value).join('');
+      setValue('transcription', nextValue, {
+        shouldDirty: true,
+        shouldTouch: true,
+        shouldValidate: true,
+      });
+    },
+    [transcription, inputCursorPosition.position, setValue],
+  );
 
   return (
     <Stack
@@ -55,7 +72,13 @@ export const WordForm = ({ word, onSubmit }: Props) => {
       <FormCheckboxField control={control} name="favorite" label="Избранное" />
       <FormTextField control={control} name="word" label="Слово" autoFocus />
       <FormTextField control={control} name="translate" label="Перевод" />
-      <FormTextField control={control} name="transcription" label="Транскрипция" />
+      <FormTextField
+        control={control}
+        name="transcription"
+        label="Транскрипция"
+        setRefInput={inputCursorPosition.setInputRef}
+      />
+      <TranscriptionKeyboard onClick={handleClickTransKey} />
       <FormSelectField control={control} name="types" label="Тип" choices={WORD_TYPE_CHOICES} multiple />
       <FormSelectField control={control} name="tags" label="Теги" choices={tagChoices} multiple />
       <FormTextField control={control} name="example" label="Пример" />
