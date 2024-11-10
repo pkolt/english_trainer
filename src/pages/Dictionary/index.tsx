@@ -7,7 +7,7 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import { useDialogs } from '@toolpad/core/useDialogs';
-import WordFormDialog from './WordFormDialog';
+import WordFormDialog from '@/components/WordFormDialog';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
@@ -157,8 +157,8 @@ const Dictionary = () => {
             value={searchText}
             onChange={handleChangeSearch}
           />
-          <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
           <FilterByTags value={tagIds} onChangeValue={setTagIds} />
+          <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
           {isUsedFilter && (
             <Button variant="outlined" onClick={handleClickReset}>
               Сброс

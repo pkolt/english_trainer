@@ -12,6 +12,7 @@ export const createWord = async (data: Word, skipInvalidate?: boolean): Promise<
   if (!skipInvalidate) {
     await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordList] });
     await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordTypeChoices] });
+    await queryClient.invalidateQueries({ queryKey: [QueryKey.GetTagList] });
   }
 };
 
@@ -23,6 +24,7 @@ export const updateWord = async (word: Word): Promise<void> => {
   await db.put(StoreName.Words, word);
   await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWordList] });
   await queryClient.invalidateQueries({ queryKey: [QueryKey.GetWord, word.id] });
+  await queryClient.invalidateQueries({ queryKey: [QueryKey.GetTagList] });
 };
 
 export const deleteWord = async (id: string, skipInvalidate?: boolean): Promise<void> => {

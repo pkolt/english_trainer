@@ -13,7 +13,7 @@ export const FilterByWordTypes = ({ value, onChangeValue }: Props) => {
   return (
     <SelectField
       label="Фильтр по типу"
-      choices={wordTypeChoices}
+      choices={wordTypeChoices ?? []}
       value={value}
       onChangeValue={onChangeValue}
       multiple

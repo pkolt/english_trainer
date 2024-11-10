@@ -3,6 +3,7 @@ import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
 import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
 import { Word } from '@/services/words/types';
 import { renderWordTypes } from '@/services/words/utils';
+import { useMemo } from 'react';
 
 interface Props {
   data: Word;
@@ -10,25 +11,29 @@ interface Props {
 }
 
 export const Question = ({ data, autoSpeak }: Props) => {
+  const wordTypesAsStr = useMemo(() => renderWordTypes(data.types), [data.types]);
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', flex: 1, gap: 2, justifyContent: 'space-between' }}>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <SimpleSpeakButton text={data.word} autoSpeak={autoSpeak} />
-
-          <Stack>
-            <Stack direction="row" spacing={1} alignItems="center">
-              <Typography variant="h5">{data.word}</Typography>
+        <Box>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <SimpleSpeakButton text={data.word} autoSpeak={autoSpeak} />
+            <Typography variant="h4">{data.word}</Typography>
+            {data.transcription && (
               <Typography variant="body1" color="textSecondary">
                 [{data.transcription}]
               </Typography>
-            </Stack>
-
-            <Typography variant="caption" color="success">
-              ({renderWordTypes(data.types)})
-            </Typography>
+            )}
           </Stack>
-        </Stack>
+
+          <Box paddingLeft={6}>
+            {wordTypesAsStr && (
+              <Typography variant="caption" color="success">
+                ({wordTypesAsStr})
+              </Typography>
+            )}
+          </Box>
+        </Box>
 
         {data.example && (
           <>
