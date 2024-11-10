@@ -39,8 +39,8 @@ const Trainers = () => {
         <Typography variant="h4" marginBottom={2}>
           Тренировки
         </Typography>
-        <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
         <FilterByTags value={tags} onChangeValue={setTags} />
+        <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
         {isFiltered && (
           <Button variant="outlined" onClick={resetFilter}>
             Сброс

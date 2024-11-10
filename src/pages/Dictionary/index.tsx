@@ -157,8 +157,8 @@ const Dictionary = () => {
             value={searchText}
             onChange={handleChangeSearch}
           />
-          <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
           <FilterByTags value={tagIds} onChangeValue={setTagIds} />
+          <FilterByWordTypes value={wordTypes} onChangeValue={setWordTypes} />
           {isUsedFilter && (
             <Button variant="outlined" onClick={handleClickReset}>
               Сброс
