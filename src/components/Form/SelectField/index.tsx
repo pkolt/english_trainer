@@ -10,7 +10,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 const getTitle = (choices: Choice[], value: unknown) => {
   const item = choices.find((it) => it.value === value);
@@ -27,9 +27,9 @@ const renderValue = (values: unknown[] | unknown, choices: Choice[]): string => 
   return getTitle(choices, values) ?? '';
 };
 
-type Props<T> = {
+type SelectFieldProps<T> = {
   label: string;
-  choices?: Choice[];
+  choices: Choice[];
   multiple?: boolean;
   value: T;
   onChangeValue(value: T): void;
@@ -40,8 +40,11 @@ export const SelectField = <T extends unknown[] | unknown>({
   multiple,
   onChangeValue,
   ...props
-}: Props<T>) => {
+}: SelectFieldProps<T>) => {
   const { value, label } = props;
+  const orderedChoices = useMemo(() => {
+    return choices.toSorted((a, b) => a.label.localeCompare(b.label));
+  }, [choices]);
 
   const handleOnChange = useCallback(
     (event: SelectChangeEvent<T>) => {
@@ -58,8 +61,8 @@ export const SelectField = <T extends unknown[] | unknown>({
         value={value}
         onChange={handleOnChange}
         input={<OutlinedInput label={label} />}
-        renderValue={(values: T) => renderValue(values, choices ?? [])}>
-        {choices?.map((it) => {
+        renderValue={(values: T) => renderValue(values, choices)}>
+        {orderedChoices.map((it) => {
           const selected = Array.isArray(value) ? value.includes(it.value) : value === it.value;
           const countText = it.count !== undefined ? `(${it.count})` : '';
           const title = [it.label, countText].join(' ');
