@@ -1,7 +1,6 @@
 import { Word } from '@/services/words/types';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { fixOnlyEnglish, fixOnlyRussian } from '@/utils/keyboard';
 import { WordSchema } from '@/services/words/schema';
 import { Button, Stack } from '@mui/material';
 import { WORD_TYPE_CHOICES } from '@/constants/form';
@@ -54,15 +53,13 @@ export const WordForm = ({ word, onSubmit }: Props) => {
       inert={isSubmitting ? '' : undefined}
       marginTop={1}>
       <FormCheckboxField control={control} name="favorite" label="Избранное" />
-      <FormTextField control={control} name="word" label="Слово" transform={fixOnlyEnglish} autoFocus />
-      <FormTextField control={control} name="translate" label="Перевод" transform={fixOnlyRussian} />
+      <FormTextField control={control} name="word" label="Слово" autoFocus />
+      <FormTextField control={control} name="translate" label="Перевод" />
       <FormTextField control={control} name="transcription" label="Транскрипция" />
       <FormSelectField control={control} name="types" label="Тип" choices={WORD_TYPE_CHOICES} multiple />
       <FormSelectField control={control} name="tags" label="Теги" choices={tagChoices} multiple />
-      <FormTextField control={control} name="example" label="Пример" transform={fixOnlyEnglish} />
-      {!!example && (
-        <FormTextField control={control} name="exampleTranslate" label="Перевод примера" transform={fixOnlyRussian} />
-      )}
+      <FormTextField control={control} name="example" label="Пример" />
+      {!!example && <FormTextField control={control} name="exampleTranslate" label="Перевод примера" />}
       <Stack direction="row" spacing={2}>
         <LoadingButton variant="contained" type="submit" loading={isSubmitting} disabled={!isValid || !isDirty}>
           {word ? 'Сохранить' : 'Создать'}
