@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Question, Word, WordType } from './types';
+import { QuizItem, Word, WordType } from './types';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
 import { WORD_TYPE_TO_NAME } from '@/constants/word';
 
@@ -65,8 +65,8 @@ export const renderWordTypes = (values: WordType[]) => {
 const QUESTIONS_MAX = 7;
 const ANSWERS_MAX = 5;
 
-export const makeQuestions = (words: Word[]): Question[] => {
-  const questions: Question[] = [];
+export const makeQuizItems = (words: Word[]): QuizItem[] => {
+  const questions: QuizItem[] = [];
   for (const word of words.slice(0, QUESTIONS_MAX)) {
     const answers: Word[] = [word];
     const answerIds: string[] = [word.id];
@@ -87,4 +87,18 @@ export const makeQuestions = (words: Word[]): Question[] => {
     });
   }
   return questions;
+};
+
+export const updateQuizItems = (items: QuizItem[], words: Word[]): QuizItem[] => {
+  const wordsById = new Map<string, Word>();
+  for (const word of words) {
+    wordsById.set(word.id, word);
+  }
+  return items.map((item) => {
+    return {
+      question: wordsById.get(item.question.id) ?? item.question,
+      answers: item.answers.map((answer) => wordsById.get(answer.id) ?? answer),
+      userAnswer: wordsById.get(item.userAnswer?.id ?? '') ?? item.userAnswer,
+    };
+  });
 };

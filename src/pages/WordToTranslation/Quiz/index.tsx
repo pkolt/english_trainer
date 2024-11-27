@@ -1,17 +1,17 @@
 import { Button, FormControlLabel, Grid2 as Grid, Switch, Typography } from '@mui/material';
 import { Question } from './Question';
 import { Answers } from './Answers';
-import { Word, Question as QuestionType } from '@/services/words/types';
+import { Word, QuizItem } from '@/services/words/types';
 
 interface Props {
-  question: QuestionType;
+  item: QuizItem;
   onClickAnswer: (answer: Word) => void;
   onGoToNextQuestion: () => void;
   autoSpeak: boolean;
   onChangeAutoSpeak: (value: boolean) => void;
 }
 
-export const Quiz = ({ question, onClickAnswer, onGoToNextQuestion, autoSpeak, onChangeAutoSpeak }: Props) => {
+export const Quiz = ({ item, onClickAnswer, onGoToNextQuestion, autoSpeak, onChangeAutoSpeak }: Props) => {
   return (
     <Grid container rowSpacing={4} columnSpacing={8}>
       <Grid size={12} textAlign="right">
@@ -23,13 +23,13 @@ export const Quiz = ({ question, onClickAnswer, onGoToNextQuestion, autoSpeak, o
         />
       </Grid>
       <Grid size={6} sx={{ display: 'flex' }}>
-        <Question data={question.question} autoSpeak={autoSpeak} />
+        <Question data={item.question} autoSpeak={autoSpeak} />
       </Grid>
       <Grid size={6}>
-        <Answers data={question} onClickAnswer={onClickAnswer} />
+        <Answers item={item} onClickAnswer={onClickAnswer} />
       </Grid>
       <Grid offset={6} size={6}>
-        {question.userAnswer && (
+        {item.userAnswer && (
           <Button variant="outlined" onClick={onGoToNextQuestion} size="large">
             Дальше
           </Button>

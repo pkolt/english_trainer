@@ -1,18 +1,18 @@
 import { Button, Stack } from '@mui/material';
-import { Word, Question } from '@/services/words/types';
+import { Word, QuizItem } from '@/services/words/types';
 
 interface Props {
-  data: Question;
+  item: QuizItem;
   onClickAnswer: (word: Word) => void;
 }
 
-export const Answers = ({ data, onClickAnswer }: Props) => {
+export const Answers = ({ item, onClickAnswer }: Props) => {
   return (
     <Stack spacing={2}>
-      {data.answers.map((it, index) => {
-        const isAnswered: boolean = !!data.userAnswer;
-        const isSelected: boolean = data.userAnswer?.id === it.id;
-        const isSuccess: boolean = it.id === data.question.id;
+      {item.answers.map((it, index) => {
+        const isAnswered: boolean = !!item.userAnswer;
+        const isSelected: boolean = item.userAnswer?.id === it.id;
+        const isSuccess: boolean = it.id === item.question.id;
         return (
           <Button
             key={it.id}

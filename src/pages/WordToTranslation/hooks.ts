@@ -1,8 +1,14 @@
 import { useHotkeys, HotkeyCallback } from 'react-hotkeys-hook';
 import { useGetWordList } from '@/services/words/hooks';
-import { Word, Question } from '@/services/words/types';
-import { filterWordsByTagIds, filterWordsByTypes, makeQuestions, renderWordTypes } from '@/services/words/utils';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Word, QuizItem } from '@/services/words/types';
+import {
+  filterWordsByTagIds,
+  filterWordsByTypes,
+  makeQuizItems,
+  renderWordTypes,
+  updateQuizItems,
+} from '@/services/words/utils';
+import { useCallback, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TrainerRouteState } from '../Trainers/types';
 import {
@@ -13,6 +19,7 @@ import {
 import { useGetWordProgressList } from '@/services/wordProgress/hooks';
 import { useGetTagList } from '@/services/tags/hooks';
 import { renderTags } from '@/services/tags/utils';
+import { useEffectOnce } from '@/hooks/useOnceEffect';
 
 export const useWordToTranslation = () => {
   const { data: tagList, isLoading: isLoadingTags } = useGetTagList();
@@ -20,16 +27,15 @@ export const useWordToTranslation = () => {
   const { data: wordProgressList, isLoading: isLoadingWordProgressList } = useGetWordProgressList();
   const isLoading = isLoadingWordList || isLoadingWordProgressList || isLoadingTags;
 
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [items, setItems] = useState<QuizItem[]>([]);
   const [curIndex, setCurIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(false);
-  const refOnlyOnce = useRef(false);
 
   const stepNumber = curIndex + 1;
-  const stepCount = questions.length;
-  const question = questions.length > 0 ? questions[curIndex] : null;
-  const isUserAnswered = !!question?.userAnswer;
+  const stepCount = items.length;
+  const curItem = items.length > 0 ? items[curIndex] : null;
+  const isUserAnswered = !!curItem?.userAnswer;
 
   const routeState = (useLocation().state ?? {}) as TrainerRouteState;
 
@@ -58,37 +64,37 @@ export const useWordToTranslation = () => {
   const applyUserAnswer = useCallback(
     (word: Word) => {
       if (!isUserAnswered) {
-        setQuestions((state) =>
+        setItems((state) =>
           state.map((it) => {
-            return it === question ? { ...it, userAnswer: word } : it;
+            return it === curItem ? { ...it, userAnswer: word } : it;
           }),
         );
       }
     },
-    [question, isUserAnswered],
+    [curItem, isUserAnswered],
   );
 
   const applyUserAnswerByKeyNumber: HotkeyCallback = useCallback(
     (event) => {
       const keyNumber = Number(event.key);
-      const answer = question?.answers[keyNumber - 1];
+      const answer = curItem?.answers[keyNumber - 1];
       if (answer) {
         applyUserAnswer(answer);
       }
     },
-    [applyUserAnswer, question?.answers],
+    [applyUserAnswer, curItem?.answers],
   );
 
   const goToNextQuestion = useCallback(() => {
     if (isUserAnswered) {
-      if (curIndex < questions.length - 1) {
+      if (curIndex < items.length - 1) {
         setCurIndex((state) => state + 1);
       } else {
         setIsFinished(true);
-        saveWordProgressList(questions);
+        saveWordProgressList(items);
       }
     }
-  }, [curIndex, isUserAnswered, questions]);
+  }, [curIndex, isUserAnswered, items]);
 
   const startQuiz = useCallback(() => {
     if (!filteredWordList) {
@@ -96,15 +102,22 @@ export const useWordToTranslation = () => {
     }
     setIsFinished(false);
     setCurIndex(0);
-    setQuestions(makeQuestions(filteredWordList));
+    setItems(makeQuizItems(filteredWordList));
   }, [filteredWordList]);
 
-  useEffect(() => {
-    if (filteredWordList && !refOnlyOnce.current) {
-      refOnlyOnce.current = true;
-      startQuiz();
-    }
-  }, [filteredWordList, startQuiz]);
+  useEffectOnce({
+    effect: startQuiz,
+    condition: () => !!filteredWordList,
+    deps: [filteredWordList, startQuiz],
+  });
+
+  // Update items after changed word list
+  useEffectOnce({
+    effect: () => setItems((state) => updateQuizItems(state, wordList!)),
+    condition: () => !!wordList,
+    skipFirst: true,
+    deps: [wordList],
+  });
 
   useHotkeys('space,enter', isFinished ? startQuiz : goToNextQuestion, { preventDefault: true });
   useHotkeys('1,2,3,4,5,6,7,8,9', applyUserAnswerByKeyNumber, { preventDefault: true });
@@ -113,11 +126,11 @@ export const useWordToTranslation = () => {
     isLoading,
     stepNumber,
     stepCount,
-    question,
+    curItem,
     applyUserAnswer,
     goToNextQuestion,
     isFinished,
-    questions,
+    items,
     startQuiz,
     autoSpeak,
     setAutoSpeak,
