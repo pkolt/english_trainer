@@ -11,11 +11,11 @@ const WordToTranslation = () => {
     isLoading,
     stepNumber,
     stepCount,
-    question,
+    curItem,
     applyUserAnswer,
     goToNextQuestion,
     isFinished,
-    questions,
+    items,
     startQuiz: restart,
     autoSpeak,
     setAutoSpeak,
@@ -45,10 +45,10 @@ const WordToTranslation = () => {
           </Stack>
         )}
       </Stack>
-      {isFinished && <FinalReport data={questions} />}
-      {!isFinished && question && (
+      {isFinished && <FinalReport data={items} />}
+      {!isFinished && curItem && (
         <Quiz
-          question={question}
+          item={curItem}
           onClickAnswer={applyUserAnswer}
           onGoToNextQuestion={goToNextQuestion}
           autoSpeak={autoSpeak}

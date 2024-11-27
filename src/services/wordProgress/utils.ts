@@ -1,5 +1,5 @@
 import { DateTime, Interval } from 'luxon';
-import { Question, Word } from '../words/types';
+import { QuizItem, Word } from '../words/types';
 import { findWordProgressByWord, updateWordProgress } from './api';
 import { WordProgress } from './types';
 import { mergeValues } from '@/utils/form';
@@ -14,7 +14,7 @@ export const getWordProgressDefaultValues = (wordId: string): WordProgress => {
   };
 };
 
-export const saveWordProgressList = async (questions: Question[]): Promise<void> => {
+export const saveWordProgressList = async (questions: QuizItem[]): Promise<void> => {
   for (const { question: word, userAnswer } of questions) {
     const isRightAnswer = word.id === userAnswer?.id;
     const wordProgress = (await findWordProgressByWord(word.id)) ?? getWordProgressDefaultValues(word.id);
