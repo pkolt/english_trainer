@@ -19,7 +19,8 @@ import {
 import { useGetWordProgressList } from '@/services/wordProgress/hooks';
 import { useGetTagList } from '@/services/tags/hooks';
 import { renderTags } from '@/services/tags/utils';
-import { useEffectOnce } from '@/hooks/useOnceEffect';
+import { useEffectOnce } from '@/hooks/useEffectOnce';
+import { useEffectNext } from '@/hooks/useEffectNext';
 
 export const useWordToTranslation = () => {
   const { data: tagList, isLoading: isLoadingTags } = useGetTagList();
@@ -112,10 +113,9 @@ export const useWordToTranslation = () => {
   });
 
   // Update items after changed word list
-  useEffectOnce({
+  useEffectNext({
     effect: () => setItems((state) => updateQuizItems(state, wordList!)),
     condition: () => !!wordList,
-    skipFirst: true,
     deps: [wordList],
   });
 
