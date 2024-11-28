@@ -6,7 +6,6 @@ import { Settings } from 'luxon';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import { setupMatchers } from './test-utils/matchers';
 import { server } from './test-utils/msw/server';
-import './i18n';
 
 setupMatchers();
 
