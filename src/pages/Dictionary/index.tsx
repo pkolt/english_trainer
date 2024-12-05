@@ -1,5 +1,5 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
-import { Typography, Box, IconButton, Button, Input } from '@mui/material';
+import { Typography, Box, IconButton, Button, Input, Stack } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
 import { useCallback, useMemo, useState } from 'react';
@@ -11,6 +11,7 @@ import WordFormDialog from '@/components/WordFormDialog';
 import StarRoundedIcon from '@mui/icons-material/StarRounded';
 import StarBorderRoundedIcon from '@mui/icons-material/StarBorderRounded';
 import GetAppRoundedIcon from '@mui/icons-material/GetAppRounded';
+import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import { ImportWordsDialog } from './ImportWordsDialog';
 import SearchIcon from '@mui/icons-material/Search';
 import { SimpleSpeakButton } from '@/components/SimpleSpeakButton';
@@ -25,6 +26,7 @@ import {
   orderWordsByFavorite,
   renderWordTypes,
 } from '@/services/words/utils';
+import { ExportWordsDialog } from './ExportWordsDialog';
 
 const Dictionary = () => {
   const { data: wordList, isLoading } = useGetWordList();
@@ -129,6 +131,10 @@ const Dictionary = () => {
     dialogs.open(ImportWordsDialog);
   }, [dialogs]);
 
+  const handleClickExport = useCallback(() => {
+    dialogs.open(ExportWordsDialog);
+  }, [dialogs]);
+
   const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
   }, []);
@@ -165,9 +171,14 @@ const Dictionary = () => {
             </Button>
           )}
         </Box>
-        <Button variant="outlined" startIcon={<GetAppRoundedIcon />} onClick={handleClickImport}>
-          Импорт
-        </Button>
+        <Stack direction="row" gap={1}>
+          <Button variant="outlined" startIcon={<FileUploadRoundedIcon />} onClick={handleClickExport}>
+            Экспорт
+          </Button>
+          <Button variant="outlined" startIcon={<GetAppRoundedIcon />} onClick={handleClickImport}>
+            Импорт
+          </Button>
+        </Stack>
       </Box>
       <Box width="100%" minHeight="400px">
         <DataGrid

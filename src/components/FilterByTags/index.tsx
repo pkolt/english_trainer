@@ -14,7 +14,7 @@ interface Props {
 }
 
 export const FilterByTags = ({ value, onChangeValue }: Props) => {
-  const { data: tagList } = useGetTagList();
+  const { data: tagList } = useGetTagList({ emptyTag: true });
 
   const filterTagChoices = useMemo(() => {
     return convertTagListToChoices(tagList ?? []);

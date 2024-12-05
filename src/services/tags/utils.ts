@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { Tag } from './types';
+import { Tag, TagWithCount } from './types';
 
 export const getTagDefaultValues = (): Tag => {
   const today = DateTime.utc().toISO();
@@ -18,4 +18,8 @@ export const renderTags = (tagIds: string[], tagList: Tag[]) => {
       return tag?.name ?? 'Unknown';
     })
     .join(', ');
+};
+
+export const orderTagsByAbc = (list: TagWithCount[]): TagWithCount[] => {
+  return list.toSorted((a, b) => a.name.localeCompare(b.name));
 };

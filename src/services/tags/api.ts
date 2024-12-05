@@ -1,15 +1,35 @@
 import { db } from '../db';
 import { Tag, TagWithCount } from './types';
-import { deleteWord, getWordsByTag, getCountWordByTag, updateWord } from '../words/api';
-import { QueryKey, StoreName } from '../constants';
+import { deleteWord, getWordsByTag, getCountWordByTag, updateWord, getCountAllWords } from '../words/api';
+import { EMPTY_TAG_ID, EMPTY_TAG_NAME, QueryKey, StoreName } from '../constants';
 import { queryClient } from '../queryClient';
 
-export const getTagList = async (): Promise<TagWithCount[]> => {
+export interface GetTagListParams {
+  emptyTag?: boolean;
+}
+
+export const getTagList = async ({ emptyTag }: GetTagListParams): Promise<TagWithCount[]> => {
   const tags = await db.getAll(StoreName.Tags);
   const result: TagWithCount[] = [];
+  let countWordsWithTags = 0;
   for (const tag of tags) {
     const count = await getCountWordByTag(tag.id);
     result.push({ ...tag, count });
+    countWordsWithTags += count;
+  }
+  if (emptyTag) {
+    // IndexedDB isn't allowing filtering by an empty array
+    const countAllWords = await getCountAllWords();
+    const countWordsWithoutTags = countAllWords - countWordsWithTags;
+    if (countWordsWithoutTags) {
+      result.push({
+        id: EMPTY_TAG_ID,
+        name: EMPTY_TAG_NAME,
+        createdAt: '',
+        updatedAt: '',
+        count: countWordsWithoutTags,
+      });
+    }
   }
   return result;
 };

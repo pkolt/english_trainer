@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import { QuizItem, Word, WordType } from './types';
 import { getRandomItemOfArray, shuffle } from '@/utils/random';
 import { WORD_TYPE_TO_NAME } from '@/constants/word';
+import { EMPTY_TAG_ID } from '../constants';
 
 export const getWordDefaultValues = (): Word => {
   const today = DateTime.utc().toISO();
@@ -25,7 +26,10 @@ export const getWordDefaultValues = (): Word => {
 export const filterWordsByTagIds = (list: Word[], tagIds: string[]): Word[] => {
   if (tagIds.length > 0) {
     const searchSet = new Set(tagIds);
-    return list.filter((it) => it.tags.length > 0 && !new Set(it.tags).isDisjointFrom(searchSet));
+    return list.filter((it) => {
+      const wordTagSet = new Set(it.tags.length === 0 ? [EMPTY_TAG_ID] : it.tags);
+      return !wordTagSet.isDisjointFrom(searchSet);
+    });
   }
   return list;
 };
