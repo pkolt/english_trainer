@@ -12,3 +12,6 @@ export enum QueryKey {
   GetTag = 'get_tag',
   GetWordProgressList = 'get_word_progress_list',
 }
+
+export const EMPTY_TAG_ID = 'EMPTY_TAG_ID';
+export const EMPTY_TAG_NAME = '⚠️ Без тегов';

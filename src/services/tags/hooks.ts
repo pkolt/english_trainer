@@ -1,11 +1,11 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { createTag, deleteTag, getTagList, readTag, updateTag } from './api';
+import { createTag, deleteTag, getTagList, GetTagListParams, readTag, updateTag } from './api';
 import { QueryKey } from '../constants';
 
-export const useGetTagList = () =>
+export const useGetTagList = (params: GetTagListParams = {}) =>
   useQuery({
-    queryKey: [QueryKey.GetTagList],
-    queryFn: getTagList,
+    queryKey: [QueryKey.GetTagList, params],
+    queryFn: () => getTagList(params),
   });
 
 export const useCreateTag = () =>
