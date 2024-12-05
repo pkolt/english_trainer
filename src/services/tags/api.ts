@@ -1,8 +1,14 @@
 import { db } from '../db';
 import { Tag, TagWithCount } from './types';
-import { deleteWord, getWordsByTag, getCountWordByTag, updateWord, getCountAllWords } from '../words/api';
+import { deleteWord, getWordsByTag, getCountWordByTag, updateWord, getWordList } from '../words/api';
 import { EMPTY_TAG_ID, EMPTY_TAG_NAME, QueryKey, StoreName } from '../constants';
 import { queryClient } from '../queryClient';
+
+// IndexedDB isn't allowing filtering by an empty array
+const getCountWordsWithoutTags = async (): Promise<number> => {
+  const allWords = await getWordList();
+  return allWords.filter((it) => it.tags.length === 0).length;
+};
 
 export interface GetTagListParams {
   emptyTag?: boolean;
@@ -11,16 +17,12 @@ export interface GetTagListParams {
 export const getTagList = async ({ emptyTag }: GetTagListParams): Promise<TagWithCount[]> => {
   const tags = await db.getAll(StoreName.Tags);
   const result: TagWithCount[] = [];
-  let countWordsWithTags = 0;
   for (const tag of tags) {
     const count = await getCountWordByTag(tag.id);
     result.push({ ...tag, count });
-    countWordsWithTags += count;
   }
   if (emptyTag) {
-    // IndexedDB isn't allowing filtering by an empty array
-    const countAllWords = await getCountAllWords();
-    const countWordsWithoutTags = countAllWords - countWordsWithTags;
+    const countWordsWithoutTags = await getCountWordsWithoutTags();
     if (countWordsWithoutTags) {
       result.push({
         id: EMPTY_TAG_ID,

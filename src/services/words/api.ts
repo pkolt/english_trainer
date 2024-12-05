@@ -51,10 +51,6 @@ export const getCountWordByTag = async (tagId: string): Promise<number> => {
   return db.countFromIndex(StoreName.Words, 'by-tags', IDBKeyRange.only(tagId));
 };
 
-export const getCountAllWords = async (): Promise<number> => {
-  return db.count(StoreName.Words);
-};
-
 export const getWordsByTag = async (tagId: string): Promise<Word[]> => {
   return db.getAllFromIndex(StoreName.Words, 'by-tags', IDBKeyRange.only(tagId));
 };
