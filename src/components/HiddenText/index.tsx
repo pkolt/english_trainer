@@ -10,7 +10,7 @@ export const HiddenText = ({ children }: React.PropsWithChildren) => {
 
   useEffect(() => {
     setIsHide(true);
-  }, [children]);
+  }, []);
 
   return (
     <div className={cn(styles.container, isHide && styles.hide)} onClick={toggle}>
