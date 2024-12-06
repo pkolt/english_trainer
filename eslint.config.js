@@ -1,50 +1,32 @@
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-import { fixupConfigRules, fixupPluginRules } from '@eslint/compat';
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import pluginReact from 'eslint-plugin-react';
 import reactRefresh from 'eslint-plugin-react-refresh';
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
+import pluginReactHooks from 'eslint-plugin-react-hooks';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
-
+/** @type {import('eslint').Linter.Config[]} */
 export default [
-  {
-    ignores: ['**/dist', '**/eslint.config.js'],
-  },
-  ...fixupConfigRules(
-    compat.extends(
-      'eslint:recommended',
-      'plugin:@typescript-eslint/recommended',
-      'plugin:react-hooks/recommended',
-      'plugin:react/recommended',
-    ),
-  ),
+  pluginJs.configs.recommended,
+  ...tseslint.configs.recommended,
+  pluginReact.configs.flat.recommended,
+  reactRefresh.configs.recommended,
+
+  // https://github.com/facebook/react/issues/28313
   {
     plugins: {
-      'react-refresh': reactRefresh,
-      '@typescript-eslint': fixupPluginRules(typescriptEslint),
+      'react-hooks': pluginReactHooks,
+      rules: pluginReactHooks.configs.recommended.rules,
     },
+  },
 
-    languageOptions: {
-      parser: tsParser,
-    },
+  // It's mad: https://github.com/eslint/eslint/issues/19093
+  // { ignores: ['dist', 'node_modules', 'coverage'] },
 
-    settings: {
-      react: {
-        version: 'detect',
-      },
-    },
-
+  { files: ['**/*.{ts,tsx}'] },
+  { settings: { react: { version: 'detect' } } },
+  { languageOptions: { globals: globals.browser } },
+  {
     rules: {
       'react-refresh/only-export-components': [
         'error',
@@ -52,7 +34,6 @@ export default [
           allowConstantExport: true,
         },
       ],
-
       'no-console': ['error', { allow: ['warn', 'error'] }],
       'react/react-in-jsx-scope': ['off'],
       'react/prop-types': ['off'],
