@@ -1,4 +1,5 @@
-/// <reference types="vitest" />
+/// <reference types="vitest/config" />
+
 import path from 'node:path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
@@ -84,8 +85,6 @@ export default defineConfig({
         'src/App.tsx',
         'src/main.tsx',
         'src/router.tsx',
-        'src/service-worker-register.ts',
-        'src/service-worker.ts',
       ],
       provider: 'v8',
       thresholds: {
