@@ -8,9 +8,8 @@
   },
   "scripts": {
     "start": "vite",
-    "build": "vite build && npm run build-sw",
+    "build": "vite build",
     "preview": "vite preview",
-    "build-sw": "esbuild ./src/service-worker.ts --bundle --minify --tsconfig=tsconfig.sw.json --outdir=./dist --banner:js=//ver.`date +%s`",
     "test": "TZ=UTC vitest",
     "bench": "TZ=UTC vitest bench",
     "test-info": "DEBUG=vite-node:* npm run test -- --logHeapUsage",
@@ -53,11 +52,6 @@
     "react-hook-form": "^7.53.2",
     "react-hotkeys-hook": "^4.6.1",
     "react-router-dom": "^6.28.0",
-    "workbox-cacheable-response": "^7.3.0",
-    "workbox-core": "^7.1.0",
-    "workbox-routing": "^7.3.0",
-    "workbox-strategies": "^7.3.0",
-    "workbox-window": "^7.3.0",
     "zod": "^3.23.8",
     "zod-i18n-map": "^2.27.0"
   },
@@ -70,9 +64,9 @@
     "@types/node": "^22.10.1",
     "@types/react": "^18.3.14",
     "@types/react-dom": "^18.3.2",
+    "@vite-pwa/assets-generator": "^0.2.6",
     "@vitejs/plugin-react": "^4.3.4",
     "@vitest/coverage-v8": "^2.1.8",
-    "esbuild": "^0.24.0",
     "eslint": "^9.16.0",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0",
@@ -85,6 +79,7 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.17.0",
     "vite": "^6.0.3",
+    "vite-plugin-pwa": "^0.21.1",
     "vitest": "^2.0.4"
   }
 }
