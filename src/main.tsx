@@ -22,8 +22,4 @@ getReadyMyDB().then(() => {
     </Suspense>,
     // </React.StrictMode>,
   );
-
-  if (import.meta.env.PROD) {
-    import('./service-worker-register.ts');
-  }
 });
