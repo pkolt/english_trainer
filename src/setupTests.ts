@@ -1,8 +1,7 @@
 // They will be run before each test file.
 
-import { DateTime } from 'luxon';
+import { DateTime, Settings } from 'luxon';
 import { cleanup } from '@testing-library/react';
-import { Settings } from 'luxon';
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import { setupMatchers } from './test-utils/matchers';
 import { server } from './test-utils/msw/server';

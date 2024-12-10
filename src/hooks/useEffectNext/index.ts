@@ -21,6 +21,6 @@ export const useEffectNext = ({ effect, condition, deps }: HookEffectNextProps) 
       }
     }
 
-    // !eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };

@@ -36,7 +36,7 @@ export const SpeakButton = ({ text, voiceURI, autoSpeak }: Props) => {
     if (isReady && autoSpeak) {
       handleClick();
     }
-    // !eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoSpeak, isReady]);
 
   return (

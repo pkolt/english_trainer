@@ -17,6 +17,6 @@ export const useEffectOnce = ({ effect, condition, deps }: HookEffectOnceProps) 
       refFlag.current = false;
     }
 
-    // !eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };

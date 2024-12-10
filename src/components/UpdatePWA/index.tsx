@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useDialogs } from '@toolpad/core/useDialogs';
+// eslint-disable-next-line import/no-unresolved
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { registerPeriodicSync } from './utils';
 
@@ -44,7 +45,7 @@ export const UpdatePWA = (): JSX.Element | null => {
           }
         });
     }
-  }, [needRefresh, updateServiceWorker, setNeedRefresh]);
+  }, [needRefresh, updateServiceWorker, setNeedRefresh, dialogs]);
 
   return null;
 };
