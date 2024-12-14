@@ -32,12 +32,7 @@ export const TagForm = ({ tag, onSubmit }: Props) => {
   });
 
   return (
-    <Stack
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      spacing={2}
-      inert={isSubmitting ? '' : undefined}
-      marginTop={1}>
+    <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2} inert={isSubmitting} marginTop={1}>
       <FormTextField control={control} name="name" label="Название" autoFocus />
       <Stack direction="row" spacing={2}>
         <LoadingButton variant="contained" type="submit" loading={isSubmitting} disabled={!isValid || !isDirty}>

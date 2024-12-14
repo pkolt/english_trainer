@@ -63,12 +63,7 @@ export const WordForm = ({ word, onSubmit }: Props) => {
   );
 
   return (
-    <Stack
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      spacing={2}
-      inert={isSubmitting ? '' : undefined}
-      marginTop={1}>
+    <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2} inert={isSubmitting} marginTop={1}>
       <FormCheckboxField control={control} name="favorite" label="Избранное" />
       <FormTextField control={control} name="word" label="Слово" autoFocus />
       <FormTextField control={control} name="translate" label="Перевод" />

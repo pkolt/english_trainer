@@ -3,6 +3,8 @@ import { Badge, Card, CardActionArea, CardContent, Stack, Typography } from '@mu
 import { useNavigate } from 'react-router-dom';
 import { TrainerRouteState } from '../types';
 
+import type { JSX } from 'react';
+
 interface Props {
   title: string;
   icon: JSX.Element;
