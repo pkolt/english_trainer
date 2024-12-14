@@ -10,7 +10,6 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { useCallback, useMemo } from 'react';
 
 const getTitle = (choices: Choice[], value: unknown) => {
   const item = choices.find((it) => it.value === value);
@@ -42,16 +41,10 @@ export const SelectField = <T extends unknown[] | unknown>({
   ...props
 }: SelectFieldProps<T>) => {
   const { value, label } = props;
-  const orderedChoices = useMemo(() => {
-    return choices.toSorted((a, b) => a.label.localeCompare(b.label));
-  }, [choices]);
-
-  const handleOnChange = useCallback(
-    (event: SelectChangeEvent<T>) => {
-      onChangeValue(event.target.value as unknown as T);
-    },
-    [onChangeValue],
-  );
+  const orderedChoices = choices.toSorted((a, b) => a.label.localeCompare(b.label));
+  const handleOnChange = (event: SelectChangeEvent<T>) => {
+    onChangeValue(event.target.value as unknown as T);
+  };
 
   return (
     <FormControl {...props}>

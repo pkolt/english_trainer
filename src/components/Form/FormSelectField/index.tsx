@@ -1,6 +1,5 @@
 import { Choice, FormField } from '@/types';
 import { MenuItem, TextField, TextFieldProps } from '@mui/material';
-import { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 }
 
 export const FormSelectField: FormField<Props & TextFieldProps> = ({ name, control, choices, multiple, ...props }) => {
-  const orderedChoices = useMemo(() => choices.toSorted((a, b) => a.label.localeCompare(b.label)), [choices]);
+  const orderedChoices = choices.toSorted((a, b) => a.label.localeCompare(b.label));
   return (
     <Controller
       control={control}

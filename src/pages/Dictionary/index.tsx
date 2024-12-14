@@ -2,7 +2,7 @@ import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
 import { Typography, Box, IconButton, Button, Input, Stack } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { Word, WordType } from '@/services/words/types';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -39,14 +39,14 @@ const Dictionary = () => {
     page: 0,
   });
 
-  const filteredWordList = useMemo(() => {
+  const filteredWordList = (() => {
     let result = filterWordsBySearchText(wordList ?? [], searchText);
     result = filterWordsByTypes(result, wordTypes);
     result = filterWordsByTagIds(result, tagIds);
     result = orderWordsByAbc(result);
     result = orderWordsByFavorite(result);
     return result;
-  }, [searchText, tagIds, wordList, wordTypes]);
+  })();
 
   const isUsedFilter: boolean = !!searchText.trim() || wordTypes.length > 0 || tagIds.length > 0;
 
@@ -123,27 +123,27 @@ const Dictionary = () => {
     },
   ];
 
-  const handleClickAddWord = useCallback(() => {
+  const handleClickAddWord = () => {
     dialogs.open(WordFormDialog);
-  }, [dialogs]);
+  };
 
-  const handleClickImport = useCallback(() => {
+  const handleClickImport = () => {
     dialogs.open(ImportWordsDialog);
-  }, [dialogs]);
+  };
 
-  const handleClickExport = useCallback(() => {
+  const handleClickExport = () => {
     dialogs.open(ExportWordsDialog);
-  }, [dialogs]);
+  };
 
-  const handleChangeSearch = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(event.target.value);
-  }, []);
+  };
 
-  const handleClickReset = useCallback(() => {
+  const handleClickReset = () => {
     setSearchText('');
     setWordTypes([]);
     setTagIds([]);
-  }, []);
+  };
 
   return (
     <DashboardPagesLayout>

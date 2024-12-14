@@ -23,10 +23,7 @@ const Trainers = () => {
   const isFiltered = tags.length > 0 || wordTypes.length > 0;
   const pageState = useMemo<TrainerRouteState>(() => ({ tags, wordTypes }), [tags, wordTypes]);
   const { data: wordProgressList } = useGetWordProgressList();
-  const countWordToTranslate = useMemo(
-    () => getCountWordToTranslateForToday(wordProgressList ?? []),
-    [wordProgressList],
-  );
+  const countWordToTranslate = getCountWordToTranslateForToday(wordProgressList ?? []);
 
   const resetFilter = () => {
     setTags([]);

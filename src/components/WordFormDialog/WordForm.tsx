@@ -5,7 +5,6 @@ import { WordSchema } from '@/services/words/schema';
 import { Button, Stack } from '@mui/material';
 import { WORD_TYPE_CHOICES } from '@/constants/form';
 import { LoadingButton } from '@mui/lab';
-import { useCallback, useMemo } from 'react';
 import { FormTextField } from '@/components/Form/FormTextField';
 import { FormCheckboxField } from '@/components//Form/FormCheckboxField';
 import { FormSelectField } from '@/components//Form/FormSelectField';
@@ -25,14 +24,9 @@ export const WordForm = ({ word, onSubmit }: Props) => {
   const { data: tagList } = useGetTagList();
   const inputCursorPosition = useInputCursorPosition();
 
-  const tagChoices = useMemo<Choice[]>(() => {
-    return (tagList ?? []).map((it) => ({ label: it.name, value: it.id }));
-  }, [tagList]);
+  const tagChoices: Choice[] = (tagList ?? []).map((it) => ({ label: it.name, value: it.id }));
 
-  const defaultValues = useMemo(() => {
-    const defVals = getWordDefaultValues();
-    return word ? mergeValues(word, defVals) : defVals;
-  }, [word]);
+  const defaultValues: Word = word ? mergeValues(word, getWordDefaultValues()) : getWordDefaultValues();
 
   const {
     formState: { isDirty, isValid, isSubmitting },
@@ -50,17 +44,14 @@ export const WordForm = ({ word, onSubmit }: Props) => {
   const example = watch('example');
   const transcription = watch('transcription');
 
-  const handleClickTransKey = useCallback(
-    (value: string) => {
-      const nextValue = transcription.split('').toSpliced(inputCursorPosition.position, 0, value).join('');
-      setValue('transcription', nextValue, {
-        shouldDirty: true,
-        shouldTouch: true,
-        shouldValidate: true,
-      });
-    },
-    [transcription, inputCursorPosition.position, setValue],
-  );
+  const handleClickTransKey = (value: string) => {
+    const nextValue = transcription.split('').toSpliced(inputCursorPosition.position, 0, value).join('');
+    setValue('transcription', nextValue, {
+      shouldDirty: true,
+      shouldTouch: true,
+      shouldValidate: true,
+    });
+  };
 
   return (
     <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2} inert={isSubmitting} marginTop={1}>

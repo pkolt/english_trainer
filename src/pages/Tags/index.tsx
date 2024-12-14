@@ -1,7 +1,7 @@
 import DashboardPagesLayout from '@/layouts/DashboardPagesLayout';
 import { Typography, Box, IconButton } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
@@ -65,9 +65,9 @@ const Tags = () => {
     },
   ];
 
-  const handleClickAdd = useCallback(() => {
+  const handleClickAdd = () => {
     dialogs.open(TagFormDialog);
-  }, [dialogs]);
+  };
 
   return (
     <DashboardPagesLayout>

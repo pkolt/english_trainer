@@ -1,5 +1,5 @@
 import { Alert, Stack } from '@mui/material';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { FileUploadButton } from '@/components/Form/FileUploadButton';
 import { importDataFromFile } from '@/utils/file';
 
@@ -7,7 +7,7 @@ export const ImportWordsForm = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [result, setResult] = useState<boolean | null>(null);
 
-  const onSelect = useCallback((files: FileList) => {
+  const onSelect = (files: FileList) => {
     if (files.length > 0) {
       setIsDisabled(true);
       const file = files[0];
@@ -20,7 +20,7 @@ export const ImportWordsForm = () => {
       });
       reader.readAsText(file);
     }
-  }, []);
+  };
 
   return (
     <Stack spacing={2} alignItems="start" marginTop={1}>

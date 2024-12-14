@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Settings, SettingsSchema } from '../../../store/settings/schema';
 import { Button, Stack, Typography } from '@mui/material';
@@ -42,13 +42,10 @@ export const SettingsForm = () => {
   const textExample = watch('textExample');
   const voiceURI = watch('voiceURI');
 
-  const onSubmit = useCallback(
-    (data: Settings) => {
-      setSettings(data);
-      reset(mergeValues(data, DEFAULT_VALUES));
-    },
-    [reset, setSettings],
-  );
+  const onSubmit = (data: Settings) => {
+    setSettings(data);
+    reset(mergeValues(data, DEFAULT_VALUES));
+  };
 
   useEffect(() => {
     getReadySpeak().then(() => {
