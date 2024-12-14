@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies 📦
         if: steps.cache-modules.outputs.cache-hit != 'true'
         shell: bash
-        run: npm ci
+        run: npm ci -f
 
   linters:
     name: Run Linters
