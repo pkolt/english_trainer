@@ -1,7 +1,6 @@
 import { Word } from '@/services/words/types';
 import { Alert, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import { DateTime } from 'luxon';
-import { useCallback } from 'react';
 import { useNotifications } from '@toolpad/core/useNotifications';
 import { DialogProps } from '@toolpad/core/useDialogs';
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,21 +15,18 @@ const WordFormDialog = ({ payload: id, open, onClose }: DialogProps<string | und
 
   const error = readError || createError || updateError;
 
-  const onSubmit = useCallback(
-    async (data: Word) => {
-      if (id) {
-        await updateWord({ ...data, updatedAt: DateTime.utc().toISO() });
-      } else {
-        await createWord(data);
-        notifications.show('Новое слово добавлено!', {
-          severity: 'success',
-          autoHideDuration: 3000,
-        });
-      }
-      onClose();
-    },
-    [createWord, id, notifications, onClose, updateWord],
-  );
+  const onSubmit = async (data: Word) => {
+    if (id) {
+      await updateWord({ ...data, updatedAt: DateTime.utc().toISO() });
+    } else {
+      await createWord(data);
+      notifications.show('Новое слово добавлено!', {
+        severity: 'success',
+        autoHideDuration: 3000,
+      });
+    }
+    onClose();
+  };
 
   return (
     <Dialog fullWidth open={open} onClose={() => onClose()}>

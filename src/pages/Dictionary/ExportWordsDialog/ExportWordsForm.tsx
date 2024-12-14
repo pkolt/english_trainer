@@ -1,18 +1,18 @@
 import { Button, Checkbox, FormControlLabel, Stack } from '@mui/material';
 import { useGetTagList } from '@/services/tags/hooks';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { orderTagsByAbc } from '@/services/tags/utils';
 import { useEffectOnce } from '@/hooks/useEffectOnce';
 import { exportWordsToFile } from '@/utils/file';
 
 export const ExportWordsForm = () => {
   const { data: tagList } = useGetTagList({ emptyTag: true });
-  const allTagIds = useMemo(() => tagList?.map((it) => it.id) ?? [], [tagList]);
-  const orderedTagList = useMemo(() => (tagList ? orderTagsByAbc(tagList) : tagList), [tagList]);
+  const allTagIds = tagList?.map((it) => it.id) ?? [];
+  const orderedTagList = tagList ? orderTagsByAbc(tagList) : tagList;
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [isDisabled, setIsDisabled] = useState(false);
 
-  const toggleTag = useCallback((tagId: string) => {
+  const toggleTag = (tagId: string) => {
     setTagIds((state) => {
       if (state.includes(tagId)) {
         return state.filter((val) => val !== tagId);
@@ -20,16 +20,16 @@ export const ExportWordsForm = () => {
         return [...state, tagId];
       }
     });
-  }, []);
+  };
 
-  const exportWords = useCallback(async () => {
+  const exportWords = async () => {
     setIsDisabled(true);
     try {
       await exportWordsToFile(tagIds);
     } finally {
       setIsDisabled(false);
     }
-  }, [tagIds]);
+  };
 
   useEffectOnce({
     effect: () => {

@@ -1,6 +1,6 @@
 import { IconButton } from '@mui/material';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getReadySpeak, speakText } from '@/utils/speak';
 import styles from './index.module.css';
 import cn from 'classnames';
@@ -15,7 +15,7 @@ export const SpeakButton = ({ text, voiceURI, autoSpeak }: Props) => {
   const [isReady, setIsReady] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const handleClick = useCallback(() => {
+  const handleClick = () => {
     if (isReady && !isSpeaking) {
       setIsSpeaking(true);
       speakText(text, voiceURI)
@@ -26,7 +26,7 @@ export const SpeakButton = ({ text, voiceURI, autoSpeak }: Props) => {
           setIsSpeaking(false);
         });
     }
-  }, [isReady, isSpeaking, text, voiceURI]);
+  };
 
   useEffect(() => {
     getReadySpeak().then(() => setIsReady(true));
@@ -36,6 +36,7 @@ export const SpeakButton = ({ text, voiceURI, autoSpeak }: Props) => {
     if (isReady && autoSpeak) {
       handleClick();
     }
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoSpeak, isReady]);
 

@@ -1,5 +1,7 @@
 import { Control, FieldValues, Path } from 'react-hook-form';
 
+import type { JSX } from 'react';
+
 export interface Choice {
   label: string;
   value: string;

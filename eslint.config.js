@@ -5,6 +5,7 @@ import pluginReact from 'eslint-plugin-react';
 import pluginHooks from 'eslint-plugin-react-hooks';
 import pluginRefresh from 'eslint-plugin-react-refresh';
 import pluginImport from 'eslint-plugin-import';
+import pluginReactCompiler from 'eslint-plugin-react-compiler'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -34,8 +35,10 @@ export default [
   {
     plugins: {
       'react-hooks': pluginHooks,
+      'react-compiler': pluginReactCompiler,
     },
     rules: {
+      'react-compiler/react-compiler': 'error',
       'react/react-in-jsx-scope': 'off',
       'react-refresh/only-export-components': [
         'error',

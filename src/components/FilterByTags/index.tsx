@@ -1,6 +1,5 @@
 import { useGetTagList } from '@/services/tags/hooks';
 import { SelectField } from '../Form/SelectField';
-import { useMemo } from 'react';
 import { TagWithCount } from '@/services/tags/types';
 import { Choice } from '@/types';
 
@@ -16,9 +15,7 @@ interface Props {
 export const FilterByTags = ({ value, onChangeValue }: Props) => {
   const { data: tagList } = useGetTagList({ emptyTag: true });
 
-  const filterTagChoices = useMemo(() => {
-    return convertTagListToChoices(tagList ?? []);
-  }, [tagList]);
+  const filterTagChoices = convertTagListToChoices(tagList ?? []);
 
   return (
     <SelectField

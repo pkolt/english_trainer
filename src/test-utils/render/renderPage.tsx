@@ -4,6 +4,8 @@ import { Providers } from './Providers';
 import { createMemoryRouter } from 'react-router-dom';
 import { PageUrl } from '@/constants/urls';
 
+import type { JSX } from 'react';
+
 interface ProviderProps {
   route: {
     path: PageUrl;

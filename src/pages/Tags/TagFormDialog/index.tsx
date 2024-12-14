@@ -4,7 +4,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useNotifications } from '@toolpad/core';
 import { useCreateTag, useReadTag, useUpdateTag } from '@/services/tags/hooks';
 import { TagForm } from './TagForm';
-import { useCallback } from 'react';
 import { Tag } from '@/services/tags/types';
 import { DateTime } from 'luxon';
 
@@ -18,21 +17,18 @@ export const TagFormDialog = ({ payload: id, open, onClose }: Props) => {
 
   const error = readError || createError || updateError;
 
-  const onSubmit = useCallback(
-    async (data: Tag) => {
-      if (id) {
-        await updateTag({ ...data, updatedAt: DateTime.utc().toISO() });
-      } else {
-        await createTag(data);
-        notifications.show('Новый тег добавлен!', {
-          severity: 'success',
-          autoHideDuration: 3000,
-        });
-      }
-      onClose();
-    },
-    [createTag, id, notifications, onClose, updateTag],
-  );
+  const onSubmit = async (data: Tag) => {
+    if (id) {
+      await updateTag({ ...data, updatedAt: DateTime.utc().toISO() });
+    } else {
+      await createTag(data);
+      notifications.show('Новый тег добавлен!', {
+        severity: 'success',
+        autoHideDuration: 3000,
+      });
+    }
+    onClose();
+  };
 
   return (
     <Dialog fullWidth open={open} onClose={() => onClose()}>

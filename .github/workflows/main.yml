@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies 📦
         if: steps.cache-modules.outputs.cache-hit != 'true'
         shell: bash
-        run: npm ci
+        run: npm ci -f
 
   linters:
     name: Run Linters
@@ -60,7 +60,7 @@ jobs:
           path: ./node_modules
           key: ${{ runner.os }}-modules-${{ hashFiles('package-lock.json') }}
       - name: Check Linters 🕵️‍♂️
-        run: npm run lint-all
+        run: npm run check-all
 
   typescript:
     name: Check TypeScript

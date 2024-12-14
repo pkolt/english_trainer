@@ -1,5 +1,7 @@
 import { RouterProviderProps, RouterProvider } from 'react-router-dom';
 
+import type { JSX } from 'react';
+
 interface ProvidersProps {
   router: RouterProviderProps['router'];
 }

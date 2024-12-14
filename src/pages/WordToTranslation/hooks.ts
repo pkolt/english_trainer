@@ -8,7 +8,7 @@ import {
   renderWordTypes,
   updateQuizItems,
 } from '@/services/words/utils';
-import { useCallback, useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { TrainerRouteState } from '../Trainers/types';
 import {
@@ -40,7 +40,7 @@ export const useWordToTranslation = () => {
 
   const routeState = (useLocation().state ?? {}) as TrainerRouteState;
 
-  const filterText = useMemo(() => {
+  const filterText = (() => {
     const names: string[] = [];
     if (routeState.wordTypes && routeState.wordTypes.length > 0) {
       names.push(renderWordTypes(routeState.wordTypes));
@@ -49,9 +49,9 @@ export const useWordToTranslation = () => {
       names.push(renderTags(routeState.tags, tagList));
     }
     return names.filter(Boolean).join(', ');
-  }, [routeState.tags, routeState.wordTypes, tagList]);
+  })();
 
-  const filteredWordList = useMemo(() => {
+  const filteredWordList = (() => {
     if (wordList && wordProgressList) {
       let result = wordList;
       result = filterWordsByTypes(result, routeState.wordTypes ?? []);
@@ -60,33 +60,27 @@ export const useWordToTranslation = () => {
       result = sortWordListByProgress(result, wordProgressList);
       return result;
     }
-  }, [routeState.tags, routeState.wordTypes, wordList, wordProgressList]);
+  })();
 
-  const applyUserAnswer = useCallback(
-    (word: Word) => {
-      if (!isUserAnswered) {
-        setItems((state) =>
-          state.map((it) => {
-            return it === curItem ? { ...it, userAnswer: word } : it;
-          }),
-        );
-      }
-    },
-    [curItem, isUserAnswered],
-  );
+  const applyUserAnswer = (word: Word) => {
+    if (!isUserAnswered) {
+      setItems((state) =>
+        state.map((it) => {
+          return it === curItem ? { ...it, userAnswer: word } : it;
+        }),
+      );
+    }
+  };
 
-  const applyUserAnswerByKeyNumber: HotkeyCallback = useCallback(
-    (event) => {
-      const keyNumber = Number(event.key);
-      const answer = curItem?.answers[keyNumber - 1];
-      if (answer) {
-        applyUserAnswer(answer);
-      }
-    },
-    [applyUserAnswer, curItem?.answers],
-  );
+  const applyUserAnswerByKeyNumber: HotkeyCallback = (event) => {
+    const keyNumber = Number(event.key);
+    const answer = curItem?.answers[keyNumber - 1];
+    if (answer) {
+      applyUserAnswer(answer);
+    }
+  };
 
-  const goToNextQuestion = useCallback(() => {
+  const goToNextQuestion = () => {
     if (isUserAnswered) {
       if (curIndex < items.length - 1) {
         setCurIndex((state) => state + 1);
@@ -95,16 +89,16 @@ export const useWordToTranslation = () => {
         saveWordProgressList(items);
       }
     }
-  }, [curIndex, isUserAnswered, items]);
+  };
 
-  const startQuiz = useCallback(() => {
+  const startQuiz = () => {
     if (!filteredWordList) {
       return;
     }
     setIsFinished(false);
     setCurIndex(0);
     setItems(makeQuizItems(filteredWordList));
-  }, [filteredWordList]);
+  };
 
   useEffectOnce({
     effect: startQuiz,

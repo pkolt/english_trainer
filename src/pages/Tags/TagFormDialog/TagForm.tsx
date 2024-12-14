@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Stack } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import { useMemo } from 'react';
 import { mergeValues } from '@/utils/form';
 import { Tag } from '@/services/tags/types';
 import { TagSchema } from '@/services/tags/schema';
@@ -15,10 +14,10 @@ interface Props {
 }
 
 export const TagForm = ({ tag, onSubmit }: Props) => {
-  const defaultValues = useMemo(() => {
+  const defaultValues = (() => {
     const defVals = getTagDefaultValues();
     return tag ? mergeValues(tag, defVals) : defVals;
-  }, [tag]);
+  })();
 
   const {
     formState: { isDirty, isValid, isSubmitting },
@@ -32,12 +31,7 @@ export const TagForm = ({ tag, onSubmit }: Props) => {
   });
 
   return (
-    <Stack
-      component="form"
-      onSubmit={handleSubmit(onSubmit)}
-      spacing={2}
-      inert={isSubmitting ? '' : undefined}
-      marginTop={1}>
+    <Stack component="form" onSubmit={handleSubmit(onSubmit)} spacing={2} inert={isSubmitting} marginTop={1}>
       <FormTextField control={control} name="name" label="Название" autoFocus />
       <Stack direction="row" spacing={2}>
         <LoadingButton variant="contained" type="submit" loading={isSubmitting} disabled={!isValid || !isDirty}>
