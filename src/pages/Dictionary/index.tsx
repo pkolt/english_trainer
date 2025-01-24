@@ -25,6 +25,8 @@ import {
   orderWordsByAbc,
   orderWordsByFavorite,
   renderWordTypes,
+  dateGetter,
+  dateFormatter,
 } from '@/services/words/utils';
 import { ExportWordsDialog } from './ExportWordsDialog';
 
@@ -56,6 +58,7 @@ const Dictionary = () => {
     {
       field: 'favorite',
       headerName: '',
+      sortable: false,
       renderCell({ value }) {
         return (
           <Box height="100%" display="flex" justifyContent="center" alignItems="center">
@@ -81,17 +84,28 @@ const Dictionary = () => {
     {
       field: 'translate',
       headerName: 'Перевод',
+      sortable: false,
       width: 250,
     },
     {
       field: 'types',
       headerName: 'Тип',
+      sortable: false,
       width: 150,
       valueGetter: renderWordTypes,
     },
     {
+      field: 'createdAt',
+      headerName: 'Добавлено',
+      width: 150,
+      valueGetter: dateGetter,
+      valueFormatter: dateFormatter,
+      type: 'date',
+    },
+    {
       field: 'actions',
       headerName: 'Действия',
+      sortable: false,
       type: 'actions',
       getActions({ row: { id, word } }) {
         return [
@@ -190,12 +204,22 @@ const Dictionary = () => {
               noRowsVariant: 'skeleton',
             },
           }}
+          initialState={{
+            sorting: {
+              sortModel: [
+                {
+                  field: 'createdAt',
+                  sort: 'desc',
+                },
+              ],
+            },
+          }}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           columns={columns}
           disableColumnResize
           disableColumnFilter
-          disableColumnSorting
+          // disableColumnSorting
           disableColumnMenu
         />
       </Box>

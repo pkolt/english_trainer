@@ -66,6 +66,14 @@ export const renderWordTypes = (values: WordType[]) => {
   return values.map((it) => WORD_TYPE_TO_NAME[it]).join(', ');
 };
 
+export const dateFormatter = (value: Date) => {
+  return DateTime.fromJSDate(value).toFormat('dd.MM.yyyy');
+};
+
+export const dateGetter = (value: string) => {
+  return DateTime.fromISO(value).toJSDate();
+};
+
 const QUESTIONS_MAX = 7;
 const ANSWERS_MAX = 5;
 
